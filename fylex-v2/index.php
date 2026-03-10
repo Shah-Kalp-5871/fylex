@@ -1438,7 +1438,7 @@
   <section id="hero">
     <div class="yt-bg-wrap">
       <iframe class="hvideo"
-        src="https://www.youtube.com/embed/8kyKS6aZkzQ?autoplay=1&mute=1&controls=0&loop=1&playlist=8kyKS6aZkzQ&showinfo=0&rel=0&modestbranding=1&enablejsapi=1"
+        src="Watch_Iframe_1.mp4"
         allow="autoplay; encrypted-media" allowfullscreen loading="eager" fetchpriority="high"></iframe>
     </div>
     <div class="video-overlay">
@@ -1460,7 +1460,7 @@
       <div class="rbg"></div>
       <div class="rblur"></div>
       <div class="rtxt r0">
-        <div class="lbl">360° View</div>
+        <div class="lbl"></div>
         <div class="rule"></div>
         <h2 class="hd" style="font-size:clamp(28px,2.8vw,44px);max-width:200px;line-height:1.15;">Our Best<br /><em>Watches</em></h2>
       </div>
@@ -1479,7 +1479,7 @@
   <section id="dial-video" style="height: 120vh; position: relative; overflow: hidden; background: #000;">
     <div class="yt-bg-wrap">
       <iframe class="hvideo"
-        src="https://www.youtube.com/embed/Xzi9uoAA6ek?autoplay=1&mute=1&controls=0&loop=1&playlist=Xzi9uoAA6ek&showinfo=0&rel=0&modestbranding=1"
+        src="Watch-iframe-2.mp4"
         allow="autoplay; encrypted-media" allowfullscreen></iframe>
     </div>
     <div class="hov" style="background: rgba(0,0,0,0.3)"></div>
@@ -1551,7 +1551,7 @@
   <section id="heritage-2-video" style="height: 120vh; position: relative; overflow: hidden; background: #000;">
     <div class="yt-bg-wrap">
       <iframe class="hvideo"
-        src="https://www.youtube.com/embed/Xzi9uoAA6ek?autoplay=1&mute=1&controls=0&loop=1&playlist=Xzi9uoAA6ek&showinfo=0&rel=0&modestbranding=1"
+        src="Watch-iframe-3.mp4"
         allow="autoplay; encrypted-media" allowfullscreen></iframe>
     </div>
     <div class="hov" style="background: rgba(0,0,0,0.3)"></div>
