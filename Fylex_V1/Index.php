@@ -229,41 +229,18 @@ $gallery = [
   .s5::before { background:linear-gradient(160deg,rgba(8,5,2,.70),rgba(28,18,6,.42)); }
   .s6::before { background:linear-gradient(180deg,rgba(6,4,1,.72),rgba(20,13,4,.44)); }
 
-  /* ── LAYERED DEPTH STACK ── */
-  .s1 {
-    border-bottom-left-radius: var(--curve);
-    border-bottom-right-radius: var(--curve);
-    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
-    z-index: 6;
-  }
-  .s2 { z-index: 5; margin-top: -80px; padding-top: 80px; }
-  .s3 {
-    border-radius: var(--curve);
-    box-shadow: 0 0 60px rgba(0,0,0,0.7);
-    z-index: 4; margin-top: -80px; padding-top: 80px;
-  }
-  .s4 { z-index: 3; margin-top: -80px; padding-top: 80px; }
-  .s5 {
-    border-radius: var(--curve);
-    box-shadow: 0 0 60px rgba(0,0,0,0.7);
-    z-index: 2; margin-top: -80px; padding-top: 80px;
-  }
-  .s6 {
-    border-top-left-radius: var(--curve);
-    border-top-right-radius: var(--curve);
-    z-index: 1; margin-top: -80px; padding-top: 80px;
-  }
-
-  @media (max-width: 768px) {
-    :root { --curve: var(--curve-sm); }
-    .s1, .s2, .s3, .s4, .s5, .s6 { margin-top: -40px; padding-top: 40px; }
-    .s1 { margin-top: 0; padding-top: 0; }
-  }
+  /* ── SECTION STACKING (no curves, full-screen, isolated) ── */
+  .s1 { z-index: 6; }
+  .s2 { z-index: 5; }
+  .s3 { z-index: 4; }
+  .s4 { z-index: 3; }
+  .s5 { z-index: 2; }
+  .s6 { z-index: 1; }
 
   /* ── SECTION BACKGROUNDS ── */
   .s1 { background-image:url('https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=1920'); }
-  .s2 { background-image:url('https://www.breitling.com/api/image-proxy/images.ctfassets.net/11yu5j5b14kx/7uDlGm6A8qj2hAOE9D2rgO/bf0a4269ce2d43f76081c48eeed2bfcf/SOH_men_hero_mobile.jpg?im=RegionOfInterestCrop%2Cwidth%3D2001%2Cheight%3D1501%2CregionOfInterest%3D%28400%2C250%29&format=auto'); }
-  .s3 { background-image:url('https://images.unsplash.com/photo-1547996160-81dfa63595aa?auto=format&fit=crop&q=80&w=1920'); }
+  .s2 { background-image:url('Rim.png'); }
+  .s3 { background-image:url('Watch_1.png'); }
   .s4 { background-image:url('https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&q=80&w=1920'); }
   .s5 { background-image:url('https://images.unsplash.com/photo-1614164185128-e4ec99c436d7?auto=format&fit=crop&q=80&w=1920'); }
   .s6 { background-image:url('https://images.unsplash.com/photo-1434056886845-dac89ffe9b56?auto=format&fit=crop&q=80&w=1920'); }
@@ -342,16 +319,6 @@ $gallery = [
     background-size: cover;
     background-position: center;
     scroll-snap-align: start;
-    margin-top: -80px;
-    padding-top: 80px;
-  }
-
-  @media (max-width: 768px) {
-    .features-wrapper {
-      height: 100svh;
-      margin-top: -40px;
-      padding-top: 40px;
-    }
   }
 
   .features-wrapper::before {
@@ -455,13 +422,13 @@ $gallery = [
       min-height: 100svh;
     }
     .features-section {
-      grid-template-columns: 1fr;
-      grid-template-rows: 350px 250px;
+      display: flex;
+      flex-direction: column;
       position: sticky;
-      top: calc(50vh - 300px);   /* stick so vertical center = viewport center */
+      top: calc(var(--header-h) + 50px);   /* gap below the fixed header */
       justify-self: center;
       width: min(92vw, 420px);
-      height: 600px;
+      height: 700px; /* updated height */
       margin: 0 auto;
       border-radius: var(--curve-sm);
       /* reset desktop absolute positioning */
@@ -471,29 +438,42 @@ $gallery = [
     .features-left {
       padding: 20px;
       border-right: none;
-      border-bottom: 1px solid var(--gold-dim);
-      height: 100%;
+      border-bottom: none;
+      flex: 1;
       overflow: hidden;
+      position: relative;
     }
     .feature-items-inner {
       position: absolute;
       padding: 0 20px;
+      top: 20px;
+      width: 100%;
     }
     .feature-item {
       padding: 15px 0 15px 16px;
     }
     .feature-item h3 { font-size: 1.2rem; }
     .feature-item p  { font-size: 0.68rem; }
+    .feature-item:last-child { padding-bottom: 40px; }
 
     .features-right {
-      display: block;
-      height: 250px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: flex-end;
+      height: 190px;
+      padding: 10px 20px 20px 20px;
       position: relative;
     }
-    .image-stack { height: 100%; }
+    .image-stack { 
+      width: 170px; 
+      height: 170px; 
+      position: relative;
+      border-radius: 8px;
+      overflow: hidden;
+    }
     .feature-counter {
       display: flex;
-      bottom: 10px; right: 10px;
+      bottom: 10px; right: 20px;
       font-size: 0.6rem;
     }
   }
@@ -976,7 +956,7 @@ $gallery = [
     onDown: () => {
       if (animating) return;
       const now = Date.now();
-      if (now - lastStateChange < 600) return;
+      if (now - lastStateChange < 350) return;
 
       // S1-S6
       if (currentIndex < sections.length) {
@@ -1008,11 +988,16 @@ $gallery = [
     onUp: () => {
       if (animating) return;
       const now = Date.now();
-      if (now - lastStateChange < 600) return;
+      if (now - lastStateChange < 350) return;
 
-      // Gallery -> Features
-      if (window.scrollY > gallery.offsetTop - 50) {
+      // Gallery -> Features (snap back to features wrapper from anywhere in/near gallery)
+      if (window.scrollY > gallery.offsetTop - window.innerHeight * 0.5) {
+        // Re-enable observer if it was disabled when we entered gallery
+        if (!observer.isEnabled) observer.enable();
+        currentFeat = items.length - 1; // land on last feature item
+        updateFeatureItem(currentFeat);
         goToSection(targets.length - 1, 0);
+        lastStateChange = now;
         return;
       }
 
@@ -1082,7 +1067,7 @@ $gallery = [
     // Smooth internal list movement
     const maxTranslate = Math.max(0, inner.scrollHeight - featureList.clientHeight);
     const progress = currentFeat / (items.length - 1);
-    gsap.to(inner, { y: -progress * maxTranslate, duration: 0.8, ease: "power2.out" });
+    gsap.to(inner, { y: -progress * maxTranslate, duration: 0.6, ease: "circ.out" });
 
     // Relative highlighting
     const refDistance = (items.length > 1 ? items[1].offsetTop - items[0].offsetTop : 100) * 1.5;
@@ -1090,7 +1075,7 @@ $gallery = [
     items.forEach(item => {
       const itemCenter = item.offsetTop + item.clientHeight / 2;
       const norm = Math.min(Math.abs(itemCenter - focalY) / refDistance, 1);
-      gsap.to(item, { opacity: Math.max(1 - norm * 0.8, 0.2), scale: 1 - norm * 0.1, duration: 0.6 });
+      gsap.to(item, { opacity: Math.max(1 - norm * 0.8, 0.2), scale: 1 - norm * 0.1, duration: 0.4, ease: "circ.out" });
     });
   }
 
