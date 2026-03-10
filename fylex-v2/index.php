@@ -302,6 +302,7 @@
       transform: translate(-50%, -50%);
       opacity: .65;
       border: none;
+      pointer-events: none;
     }
 
     .hov {
@@ -1417,16 +1418,19 @@
   <!-- Mobile Menu Overlay -->
   <div class="mobile-menu" id="mobileMenu">
     <a href="#" onclick="closeMobileMenu()">Heritage</a>
-    <a href="#" onclick="closeMobileMenu()">Collection</a>
-    <a href="#" onclick="closeMobileMenu()">Boutiques</a>
-    <a href="#" onclick="closeMobileMenu()">Journal</a>
-    <a href="#cta" class="mnbtn" onclick="closeMobileMenu()">Acquire</a>
+    <!-- <a href="#" onclick="closeMobileMenu()">Collection</a> -->
+    <a href="configure.php" onclick="closeMobileMenu()">Configure</a>
+    <!-- <a href="#" onclick="closeMobileMenu()">Boutiques</a>
+    <a href="#" onclick="closeMobileMenu()">Journal</a> -->
+    <!-- <a href="#cta" class="mnbtn" onclick="closeMobileMenu()">Acquire</a> -->
   </div>
 
   <nav id="nav">
     <a class="nlogo" href="#">FY<span></span>LEX</a>
-    <ul class="nlinks"></ul>
-    <a class="nbtn" href="#cta">Acquire</a>
+    <ul class="nlinks">
+      <li><a href="configure.php">Configure</a></li>
+    </ul>
+    <!-- <a class="nbtn" href="#cta">Acquire</a> -->
     <div class="hamburger" id="hamburger" onclick="toggleMobileMenu()">
       <span></span>
       <span></span>
@@ -1437,9 +1441,7 @@
   <!-- 1. HERO -->
   <section id="hero">
     <div class="yt-bg-wrap">
-      <iframe class="hvideo"
-        src="Watch_Iframe_1.mp4"
-        allow="autoplay; encrypted-media" allowfullscreen loading="eager" fetchpriority="high"></iframe>
+      <video class="hvideo" src="Watch_Iframe_1.mp4" autoplay loop muted playsinline></video>
     </div>
     <div class="video-overlay">
       <h1 class="r-hero">The Master of <br><em>Nautical Precision</em></h1>
@@ -1478,9 +1480,7 @@
   <!-- DIAL VIDEO -->
   <section id="dial-video" style="height: 120vh; position: relative; overflow: hidden; background: #000;">
     <div class="yt-bg-wrap">
-      <iframe class="hvideo"
-        src="Watch-iframe-2.mp4"
-        allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      <video class="hvideo" src="Watch-iframe-2.mp4" autoplay loop muted playsinline></video>
     </div>
     <div class="hov" style="background: rgba(0,0,0,0.3)"></div>
     <div class="video-overlay">
@@ -1550,9 +1550,7 @@
 
   <section id="heritage-2-video" style="height: 120vh; position: relative; overflow: hidden; background: #000;">
     <div class="yt-bg-wrap">
-      <iframe class="hvideo"
-        src="Watch-iframe-3.mp4"
-        allow="autoplay; encrypted-media" allowfullscreen></iframe>
+      <video class="hvideo" src="Watch-iframe-3.mp4" autoplay loop muted playsinline></video>
     </div>
     <div class="hov" style="background: rgba(0,0,0,0.3)"></div>
     <div class="video-overlay">
