@@ -472,13 +472,12 @@
       height: 220px;
       aspect-ratio: 1 / 1;
       cursor: pointer;
-      transition: transform 0.3s, opacity 0.3s, border-color 0.3s;
+      transition: transform 0.3s, opacity 0.3s;
       display: flex;
       align-items: center;
       justify-content: center;
       position: relative;
       border-radius: 50%;
-      border: 2px solid transparent;
       padding: 0;
       overflow: hidden;
       background: transparent !important;
@@ -495,10 +494,9 @@
 
     .dial-item:hover {
       transform: scale(1.1);
-      border-color: rgba(255,255,255,0.2);
     }
 
-    .dial-item.active { border-color: white; }
+    .dial-item.active { /* Removed border */ }
     .dial-item.hidden { opacity: 0; pointer-events: none; }
 
     .dial-nav-btn {
