@@ -253,7 +253,7 @@ $gallery = [
     max-width: min(640px, 92vw);
     width: 100%;
     opacity:0; transform:translateX(-30px); /* Slide from left */
-    transition:opacity 1.2s cubic-bezier(0.2, 0, 0.2, 1), transform 1.2s cubic-bezier(0.2, 0, 0.2, 1);
+    transition:opacity 0.7s cubic-bezier(0.2, 0, 0.2, 1), transform 0.7s cubic-bezier(0.2, 0, 0.2, 1);
   }
   .card.in { opacity:1; transform:translateX(0); }
 
@@ -947,7 +947,7 @@ $gallery = [
                 subStep = 1;
                 lastStateChange = Date.now();
               }
-            }, 1250);
+            }, 600);
           }
         }
       }
@@ -964,82 +964,120 @@ $gallery = [
     return Math.abs(elCenter - vpCenter) < 100;
   }
 
-  observer = Observer.create({
-    type: "wheel,touch,pointer",
-    onDown: () => {
-      if (animating) return;
-      const now = Date.now();
-      if (now - lastStateChange < 350) return;
+  // ── NEXT SECTION LOGIC (scroll forward / finger swipe up) ──
+  function handleNext() {
+    if (animating) return;
+    const now = Date.now();
+    if (now - lastStateChange < 350) return;
 
-      // S1-S6
-      if (currentIndex < sections.length) {
-        if (subStep === 0) {
-          clearTimeout(cardTimeout);
-          setCardState(currentIndex, true);
-          subStep = 1;
-          lastStateChange = now;
-          return;
-        } else {
-          lastStateChange = now;
-          goToSection(currentIndex + 1, 0);
-          return;
-        }
-      }
-
-      // Features Wrapper — only scroll items when centered
-      if (targets[currentIndex] === featuresWrapper && isFeatCentered()) {
-        if (currentFeat < items.length - 1) {
-          updateFeatureItem(currentFeat + 1);
-          lastStateChange = now;
-          return;
-        } else {
-          lastStateChange = now;
-          goToGallery();
-          return;
-        }
-      }
-    },
-    onUp: () => {
-      if (animating) return;
-      const now = Date.now();
-      if (now - lastStateChange < 350) return;
-
-      // Gallery -> Features (snap back to features wrapper from anywhere in/near gallery)
-      if (window.scrollY > gallery.offsetTop - window.innerHeight * 0.5) {
-        // Re-enable observer if it was disabled when we entered gallery
-        if (!observer.isEnabled) observer.enable();
-        currentFeat = items.length - 1; // land on last feature item
-        updateFeatureItem(currentFeat);
-        goToSection(targets.length - 1, 0);
+    // S1-S6
+    if (currentIndex < sections.length) {
+      if (subStep === 0) {
+        clearTimeout(cardTimeout);
+        setCardState(currentIndex, true);
+        subStep = 1;
         lastStateChange = now;
         return;
+      } else {
+        lastStateChange = now;
+        goToSection(currentIndex + 1, 0);
+        return;
       }
+    }
 
-      // Features -> Steps or S6
-      if (targets[currentIndex] === featuresWrapper) {
-        if (currentFeat > 0) {
-          updateFeatureItem(currentFeat - 1);
-          lastStateChange = now;
-          return;
-        } else {
-          lastStateChange = now;
-          goToSection(currentIndex - 1, 1);
-          return;
-        }
+    // Features Wrapper — only scroll items when centered
+    if (targets[currentIndex] === featuresWrapper && isFeatCentered()) {
+      if (currentFeat < items.length - 1) {
+        updateFeatureItem(currentFeat + 1);
+        lastStateChange = now;
+        return;
+      } else {
+        lastStateChange = now;
+        goToGallery();
+        return;
       }
+    }
+  }
 
-      // S1-S6
-      if (currentIndex < sections.length) {
-        if (subStep === 1) {
-          setCardState(currentIndex, false);
-          subStep = 0;
-          lastStateChange = now;
-          return;
-        } else {
-          lastStateChange = now;
-          goToSection(currentIndex - 1, 1);
-          return;
-        }
+  // ── PREV SECTION LOGIC (scroll backward / finger swipe down) ──
+  function handlePrev() {
+    if (animating) return;
+    const now = Date.now();
+    if (now - lastStateChange < 350) return;
+
+    // Gallery -> Features (snap back to features wrapper from anywhere in/near gallery)
+    if (window.scrollY > gallery.offsetTop - window.innerHeight * 0.5) {
+      if (!observer.isEnabled) observer.enable();
+      currentFeat = items.length - 1;
+      updateFeatureItem(currentFeat);
+      goToSection(targets.length - 1, 0);
+      lastStateChange = now;
+      return;
+    }
+
+    // Features -> Steps or S6
+    if (targets[currentIndex] === featuresWrapper) {
+      if (currentFeat > 0) {
+        updateFeatureItem(currentFeat - 1);
+        lastStateChange = now;
+        return;
+      } else {
+        lastStateChange = now;
+        goToSection(currentIndex - 1, 1);
+        return;
+      }
+    }
+
+    // S1-S6
+    if (currentIndex < sections.length) {
+      if (subStep === 1) {
+        setCardState(currentIndex, false);
+        subStep = 0;
+        lastStateChange = now;
+        return;
+      } else {
+        lastStateChange = now;
+        goToSection(currentIndex - 1, 1);
+        return;
+      }
+    }
+  }
+
+  observer = Observer.create({
+    type: "wheel,touch,pointer",
+    /*
+     * DIRECTION MAPPING
+     * ─────────────────────────────────────────────────────────────────────
+     * GSAP Observer fires:
+     *   onDown  → deltaY is POSITIVE  (wheel scrolling down  / touch finger moving DOWN)
+     *   onUp    → deltaY is NEGATIVE  (wheel scrolling up    / touch finger moving UP)
+     *
+     * On a MOUSE/TRACKPAD this is natural:
+     *   scroll down  → go to next section  (onDown → handleNext)
+     *   scroll up    → go to prev section  (onUp   → handlePrev)
+     *
+     * On TOUCH the same gesture direction applies in GSAP Observer —
+     * dragging finger DOWN also fires onDown, dragging UP fires onUp.
+     * That means finger-drag-down = onDown = handleNext which feels
+     * inverted on mobile (dragging down should reveal content ABOVE).
+     *
+     * Fix: on touch events, swap the handlers so that:
+     *   finger drag DOWN (onDown) → handlePrev  (go to previous/upper section)
+     *   finger drag UP   (onUp)   → handleNext  (go to next/lower section)
+     * ─────────────────────────────────────────────────────────────────────
+     */
+    onDown: (self) => {
+      if (self.event.type === 'touchmove' || self.event.type === 'pointermove' && self.event.pointerType === 'touch') {
+        handlePrev();
+      } else {
+        handleNext();
+      }
+    },
+    onUp: (self) => {
+      if (self.event.type === 'touchmove' || self.event.type === 'pointermove' && self.event.pointerType === 'touch') {
+        handleNext();
+      } else {
+        handlePrev();
       }
     },
     tolerance: 5,
@@ -1135,17 +1173,6 @@ $gallery = [
     hdr.classList.toggle('scrolled', window.scrollY > 60);
   }, { passive: true });
 
-  /* ── CARD FADE-IN (Disabled in favor of state-based Reveal) ── */
-  // const cards = document.querySelectorAll('.card');
-  // const io = new IntersectionObserver(entries => {
-  //   entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
-  // }, { threshold: 0.3 });
-  // cards.forEach(c => io.observe(c));
-
-  // Initial S1 visibility check: User usually starts at S1 with subStep 0 (Image only).
-  // If we want S1 text initially, we'd set subStep = 1.
-  // The user said "first image, then text", so we leave it at 0.
-
   /* ── AUTO-CENTER FEATURES ON MOBILE ── */
   if (isMobile()) {
     const featSection = document.getElementById('features');
@@ -1170,6 +1197,19 @@ $gallery = [
     }, { threshold: 0.5 });
     snapObserver.observe(featSection);
   }
+
+  // Initial reveal for S1
+  window.addEventListener('load', () => {
+    if (window.scrollY < 100) {
+      cardTimeout = setTimeout(() => {
+        if (currentIndex === 0 && subStep === 0 && !animating) {
+          setCardState(0, true);
+          subStep = 1;
+          lastStateChange = Date.now();
+        }
+      }, 800);
+    }
+  });
 </script>
 </body>
 </html>
