@@ -238,10 +238,10 @@ $gallery = [
   .s6 { z-index: 1; }
 
   /* ── SECTION BACKGROUNDS ── */
-  .s1 { background-image:url('https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=1920'); }
+  .s1 { background-image:url('https://frederiqueconstant.com/wp-content/uploads/images/Homepage_Mens_960x550-1-1920x1100.jpg'); }
   .s2 { background-image:url('Rim.png'); }
   .s3 { background-image:url('Watch_1.png'); }
-  .s4 { background-image:url('https://images.unsplash.com/photo-1524592094714-0f0654e20314?auto=format&fit=crop&q=80&w=1920'); }
+  .s4 { background-image:url('https://cdn.mos.cms.futurecdn.net/rAAf3CKPNTYUbRz8TsXyBK.jpg'); }
   .s5 { background-image:url('https://images.unsplash.com/photo-1614164185128-e4ec99c436d7?auto=format&fit=crop&q=80&w=1920'); }
   .s6 { background-image:url('https://images.unsplash.com/photo-1434056886845-dac89ffe9b56?auto=format&fit=crop&q=80&w=1920'); }
 
@@ -249,10 +249,7 @@ $gallery = [
   .card {
     position:relative; z-index:1;
     text-align:left; /* Align left */
-    padding: clamp(32px, 6vw, 64px) clamp(24px, 7vw, 72px);
-    border:1px solid rgba(201,169,110,.22);
-    background:rgba(8,12,18,.45); /* Slightly darker/deeper for left alignment */
-    backdrop-filter:blur(10px);
+    padding: clamp(32px, 6vw, 64px) 0; /* Remove horizontal padding since no background */
     max-width: min(640px, 92vw);
     width: 100%;
     opacity:0; transform:translateX(-30px); /* Slide from left */
@@ -907,6 +904,7 @@ $gallery = [
   let subStep         = 0; // 0: Image Only, 1: Text Visible
   let animating       = false;
   let lastStateChange = 0;
+  let cardTimeout     = null;
   let observer;
 
   function setCardState(sectionIndex, show) {
@@ -925,6 +923,7 @@ $gallery = [
     subStep = startSubStep;
     
     gsap.killTweensOf(window);
+    clearTimeout(cardTimeout);
     document.documentElement.style.scrollSnapType = 'none';
 
     targets.forEach((t, i) => { if (i !== currentIndex) setCardState(i, false); });
@@ -935,8 +934,22 @@ $gallery = [
       onComplete: () => {
         animating = false;
         document.documentElement.style.scrollSnapType = '';
-        if (subStep === 1 && currentIndex < sections.length) setCardState(currentIndex, true);
-        else if (subStep === 0 && currentIndex < sections.length) setCardState(currentIndex, false);
+        
+        if (currentIndex < sections.length) {
+          if (subStep === 1) {
+            setCardState(currentIndex, true);
+          } else {
+            setCardState(currentIndex, false);
+            // Auto-reveal after delay
+            cardTimeout = setTimeout(() => {
+              if (currentIndex < sections.length && subStep === 0 && !animating) {
+                setCardState(currentIndex, true);
+                subStep = 1;
+                lastStateChange = Date.now();
+              }
+            }, 1250);
+          }
+        }
       }
     });
   }
@@ -961,6 +974,7 @@ $gallery = [
       // S1-S6
       if (currentIndex < sections.length) {
         if (subStep === 0) {
+          clearTimeout(cardTimeout);
           setCardState(currentIndex, true);
           subStep = 1;
           lastStateChange = now;
