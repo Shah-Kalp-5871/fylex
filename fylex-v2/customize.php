@@ -231,16 +231,16 @@
 
     <!-- Main Subject -->
     <div class="c-main">
-      <img src="assets/img12.png" alt="Watch preview" class="watch-preview" id="previewImg">
+      <img src="assets/fylex-watch-v2/40mm.png" alt="Watch preview" class="watch-preview" id="previewImg">
     </div>
 
     <!-- Thumbnails Map -->
     <div class="thumbnails" id="thumbList">
-      <div class="thumb active" data-step="0"><img src="assets/img12.png"></div>
-      <div class="thumb" data-step="1"><img src="assets/img1.png"></div>
-      <div class="thumb" data-step="2"><img src="assets/img3.png"></div>
-      <div class="thumb" data-step="3"><img src="assets/004.png"></div>
-      <div class="thumb" data-step="4"><img src="assets/img12.png"></div>
+      <div class="thumb active" data-step="0"><img src="assets/fylex-watch-v2/40mm.png"></div>
+      <div class="thumb" data-step="1"><img src="assets/fylex-watch-v2/gold watch.png"></div>
+      <div class="thumb" data-step="2"><img src="assets/fylex-watch-v2/Fluted.png"></div>
+      <div class="thumb" data-step="3"><img src="assets/fylex-watch-v2/olive-green.png"></div>
+      <div class="thumb" data-step="4"><img src="assets/fylex-watch-v2/gold watch.png"></div>
     </div>
 
     <!-- Controls area -->
@@ -400,37 +400,50 @@
       {
         id: 'size',
         title: 'Choose your size',
-        options: ['36 mm', '40 mm'],
-        nextLbl: 'Material',
-        preview: 'assets/img2.png'
+        options: [
+          { name: '36 mm', img: 'assets/fylex-watch-v2/36mm.png' },
+          { name: '40 mm', img: 'assets/fylex-watch-v2/40mm.png' }
+        ],
+        nextLbl: 'Material'
       },
       {
         id: 'material',
         title: 'Choose your material',
-        options: ['Yellow Gold', 'White Gold', 'Everose gold', 'Premium'],
-        nextLbl: 'Bezel',
-        preview: 'assets/img1.png'
+        options: [
+          { name: 'Yellow Gold', img: 'assets/fylex-watch-v2/gold watch.png' },
+          { name: 'White Gold', img: 'assets/fylex-watch-v2/white-gold.png' },
+          { name: 'Everose gold', img: 'assets/fylex-watch-v2/everose-gold.png' },
+          { name: 'Premium', img: 'assets/fylex-watch-v2/premium.png' }
+        ],
+        nextLbl: 'Bezel'
       },
       {
         id: 'bezel',
         title: 'Choose your bezel',
-        options: ['Fluted', 'Brilliant Diamond set'],
-        nextLbl: 'Dial',
-        preview: 'assets/img3.png'
+        options: [
+          { name: 'Fluted', img: 'assets/fylex-watch-v2/Fluted.png' },
+          { name: 'Brilliant Diamond set', img: 'assets/fylex-watch-v2/Brilliant-diamondset.png' }
+        ],
+        nextLbl: 'Dial'
       },
       {
         id: 'dial',
         title: 'Choose your dial',
-        options: ['Olive Green', 'Chocolate', 'Meteorite', 'Diamond-paved'],
-        nextLbl: 'Discover',
-        preview: 'assets/004.png'
+        options: [
+          { name: 'Olive Green', img: 'assets/fylex-watch-v2/olive-green.png' },
+          { name: 'Chocolate', img: 'assets/fylex-watch-v2/chocolate.png' },
+          { name: 'Meteorite', img: 'assets/fylex-watch-v2/metorite.png' },
+          { name: 'Diamond-paved', img: 'assets/fylex-watch-v2/Diamond-paved.png' }
+        ],
+        nextLbl: 'Discover'
       },
       {
         id: 'discover',
         title: 'Final Configuration',
-        options: ['View Variations'],
-        nextLbl: 'Scroll',
-        preview: 'assets/img2.png'
+        options: [
+          { name: 'View Variations', img: 'assets/fylex-watch-v2/gold watch.png' }
+        ],
+        nextLbl: 'Scroll'
       }
     ];
 
@@ -466,26 +479,39 @@
       
       // Render options
       els.row.innerHTML = step.options.map((opt, i) => 
-        `<span class="opt ${i===0 ? 'active' : ''}">${opt}</span>`
+        `<span class="opt ${i===0 ? 'active' : ''}" data-img="${opt.img}">${opt.name}</span>`
       ).join('');
-
+  
       // Add click events to new options
       document.querySelectorAll('.opt').forEach(optEl => {
         optEl.addEventListener('click', (e) => {
           document.querySelectorAll('.opt').forEach(o => o.classList.remove('active'));
           e.target.classList.add('active');
+          
+          // Update image when option is clicked
+          const targetImg = e.target.getAttribute('data-img');
+          updatePreviewImage(targetImg);
         });
       });
-
-      // Update image
-      gsap.to(els.img, { opacity: 0, duration: 0.2, onComplete: () => {
-        els.img.src = step.preview;
-        gsap.to(els.img, { opacity: 1, duration: 0.3 });
-      }});
-
+  
+      // Update image for current step (default to first option)
+      updatePreviewImage(step.options[0].img);
+  
       // Update Thumbs highlighting
       els.thumbs.forEach(t => t.classList.remove('active'));
-      if(els.thumbs[idx]) els.thumbs[idx].classList.add('active');
+      if(els.thumbs[idx]) {
+        els.thumbs[idx].classList.add('active');
+        // Update thumbnail image to match current selection if possible, 
+        // but for now let's just keep them as step indicators
+      }
+    }
+  
+    function updatePreviewImage(src) {
+      if (els.img.src.includes(src)) return;
+      gsap.to(els.img, { opacity: 0, duration: 0.2, onComplete: () => {
+        els.img.src = src;
+        gsap.to(els.img, { opacity: 1, duration: 0.3 });
+      }});
     }
 
     function nextStep() {

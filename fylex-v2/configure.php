@@ -226,10 +226,11 @@
       background: rgba(28, 37, 53, 0.2);
       border-radius: 2px;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: background 0.3s, width 0.3s;
     }
 
     .pag-line.active {
+      width: 60px;
       background: var(--navy);
     }
 
