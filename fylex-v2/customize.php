@@ -466,10 +466,10 @@
 
     <div class="thumbnails" id="thumbList">
       <div class="thumb active" data-step="0"><img src="assets/fylex-watch-v2/40mm.png"></div>
-      <div class="thumb" data-step="1"><img src="assets/fylex-watch-v2/gold watch.png"></div>
-      <div class="thumb" data-step="2"><img src="assets/fylex-watch-v2/Fluted.png"></div>
+      <div class="thumb" data-step="1"><img src="assets/fylex-watch-v2/goldwatch.png"></div>
+      <div class="thumb" data-step="2"><img src="assets/fylex-watch-v2/Flutted.png"></div>
       <div class="thumb" data-step="3"><img src="assets/fylex-watch-v2/olive-green.png"></div>
-      <div class="thumb" data-step="4"><img src="assets/fylex-watch-v2/gold watch.png"></div>
+      <div class="thumb" data-step="4"><img src="assets/fylex-watch-v2/goldwatch.png"></div>
     </div>
 
     <div class="controls-left">
@@ -611,7 +611,7 @@
         id: 'material',
         title: 'Choose your material',
         options: [
-          { name: 'Yellow Gold', img: 'assets/fylex-watch-v2/gold watch.png' },
+          { name: 'Yellow Gold', img: 'assets/fylex-watch-v2/goldwatch.png' },
           { name: 'White Gold', img: 'assets/fylex-watch-v2/white-gold.png' },
           { name: 'Everose gold', img: 'assets/fylex-watch-v2/everose-gold.png' },
           { name: 'Premium', img: 'assets/fylex-watch-v2/premium.png' }
@@ -622,8 +622,8 @@
         id: 'bezel',
         title: 'Choose your bezel',
         options: [
-          { name: 'Fluted', img: 'assets/fylex-watch-v2/Fluted.png' },
-          { name: 'Brilliant Diamond set', img: 'assets/fylex-watch-v2/Brilliant-diamondset.png' }
+          { name: 'Fluted', img: 'assets/fylex-watch-v2/Flutted.png' },
+          { name: 'Brilliant Diamond set', img: 'assets/fylex-watch-v2/brilliant-diamond-set.png' }
         ],
         nextLbl: 'Dial'
       },
@@ -634,7 +634,7 @@
           { name: 'Olive Green', img: 'assets/fylex-watch-v2/olive-green.png' },
           { name: 'Chocolate', img: 'assets/fylex-watch-v2/chocolate.png' },
           { name: 'Meteorite', img: 'assets/fylex-watch-v2/metorite.png' },
-          { name: 'Diamond-paved', img: 'assets/fylex-watch-v2/Diamond-paved.png' }
+          { name: 'Diamond-paved', img: 'assets/fylex-watch-v2/diamond-paved.png' }
         ],
         nextLbl: 'Discover'
       },
@@ -642,7 +642,7 @@
         id: 'discover',
         title: 'Final Configuration',
         options: [
-          { name: 'View Variations', img: 'assets/fylex-watch-v2/gold watch.png' }
+          { name: 'View Variations', img: 'assets/fylex-watch-v2/goldwatch.png' }
         ],
         nextLbl: 'Scroll'
       }
