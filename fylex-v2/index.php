@@ -1499,7 +1499,7 @@
         <div class="rdot" data-index="1"></div>
         <div class="rdot" data-index="2"></div>
       </div>
-      <a href="configure.php" class="btn-configure-showcase">Configure Watches</a>
+      <a href="configure.php" class="btn-configure-showcase">Configure Our Best Watches</a>
     </div>
   </section>
 
