@@ -41,7 +41,7 @@
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      z-index: 5; /* Base layer */
+      z-index: 5;
     }
 
     .c-header {
@@ -91,6 +91,8 @@
       object-fit: contain;
       filter: drop-shadow(0 20px 40px rgba(0,0,0,0.3));
       transition: opacity 0.4s ease;
+      will-change: transform, filter, opacity;
+      transform: translateZ(0);
     }
 
     .thumbnails {
@@ -141,6 +143,7 @@
       font-size: 15px;
       font-weight: 500;
       color: var(--text-offwhite);
+      flex-wrap: wrap;
     }
 
     .opt { cursor: pointer; transition: color 0.3s; }
@@ -168,6 +171,7 @@
       align-items: center;
       gap: 8px;
       transition: transform 0.2s;
+      white-space: nowrap;
     }
 
     .btn-next:hover { transform: scale(1.05); }
@@ -210,6 +214,7 @@
       justify-content: center;
       cursor: pointer;
       transition: background 0.3s;
+      flex-shrink: 0;
     }
 
     .s-add:hover { background: #000; }
@@ -225,20 +230,20 @@
       overflow: hidden;
     }
 
-    /* ── Floating ambient orbs ── */
     .orb {
       position: absolute;
       border-radius: 50%;
       pointer-events: none;
       will-change: transform;
       filter: blur(80px);
-      opacity: 0.18;
+      opacity: 0.25;
+      z-index: 0;
+      transform: translateZ(0);
     }
     .orb-1 { width: 600px; height: 600px; background: #E8A87A; top: -100px; left: -200px; }
     .orb-2 { width: 500px; height: 500px; background: #b08060; top: 40%; right: -150px; }
     .orb-3 { width: 400px; height: 400px; background: #c8956a; bottom: 200px; left: 20%; }
 
-    /* ── Horizontal rule grid ── */
     .grid-lines {
       position: absolute;
       inset: 0;
@@ -258,51 +263,51 @@
       );
     }
 
-    /* ── Big decorative chapter numbers ── */
     .chapter-num {
       position: absolute;
+      top: 0.1em;
       left: -0.05em;
-      top: -0.3em;
       font-family: 'Playfair Display', serif;
-      font-size: clamp(160px, 18vw, 260px);
+      font-size: 35vw;
       font-weight: 700;
-      line-height: 1;
-      color: transparent;
-      -webkit-text-stroke: 1px rgba(232,168,122,0.12);
+      line-height: 0.8;
+      color: rgba(255,255,255,0.03);
       pointer-events: none;
+      z-index: 1;
       will-change: transform;
       user-select: none;
     }
 
-    /* ── Thin decorative accent line ── */
     .accent-line {
       display: block;
-      width: 60px;
+      width: 80px;
       height: 2px;
       background: var(--accent);
-      margin-bottom: 28px;
-      transform-origin: left center;
+      margin-bottom: 24px;
+      transform-origin: left;
+      will-change: transform;
     }
 
-    /* ── Individual story block ── */
     .s-block {
       position: relative;
       height: 100vh;
+      width: 100%;
       display: flex;
       align-items: center;
-      padding: 0 60px 0 clamp(60px, 10vw, 160px);
+      padding: 0 10%;
       overflow: hidden;
-      background: var(--bg-brown); /* Default background */
+      will-change: transform;
+      backface-visibility: hidden;
+      transform: translateZ(0);
+      background: var(--bg-brown);
     }
 
-    /* Assign z-index to blocks for stacking */
     #b1 { z-index: 10; }
     #b2 { z-index: 20; }
     #b3 { z-index: 30; }
     #b4 { z-index: 40; }
     #b5 { z-index: 50; }
 
-    /* Alternating: even blocks shift content right */
     .s-block:nth-child(even) .s-text-wrap {
       margin-left: auto;
       text-align: right;
@@ -343,7 +348,6 @@
       font-weight: 300;
     }
 
-    /* Decorative side image strip */
     .s-img-strip {
       position: absolute;
       right: 60px;
@@ -359,10 +363,8 @@
       left: 60px;
     }
 
-    /* Glowing separator between blocks */
     .s-divider {
       height: 1px;
-      /* background: linear-gradient(90deg, transparent 0%, rgba(232,168,122,0.35) 50%, transparent 100%); */
       margin: 0;
       position: absolute;
       bottom: 0;
@@ -372,7 +374,6 @@
       background: rgba(255,255,255,0.05);
     }
 
-    /* ── ROLEX PARALLAX COMPONENTS ── */
     .w-layer {
       position: absolute;
       top: 50%;
@@ -381,7 +382,7 @@
       width: clamp(330px, 42vw, 620px);
       height: clamp(330px, 42vw, 620px);
       pointer-events: none;
-      z-index: 1; /* Relative to its block */
+      z-index: 1;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -396,7 +397,6 @@
     .rim-img { z-index: 2; }
     .dial-img { z-index: 1; opacity: 0; }
 
-    /* ── Tracker dots ── */
     .s-tracker {
       position: fixed;
       right: 32px;
@@ -424,7 +424,6 @@
       transform: scaleY(1.9);
     }
 
-    /* ── Scroll hint arrow ── */
     .scroll-hint {
       position: absolute;
       bottom: 40px;
@@ -440,6 +439,7 @@
       text-transform: uppercase;
       z-index: 10;
       animation: bounceDown 2s ease-in-out infinite;
+      will-change: transform, opacity;
     }
 
     @keyframes bounceDown {
@@ -449,6 +449,328 @@
 
     .scroll-hint svg { opacity: 0.7; }
 
+    .dial-carousel-container {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 25;
+      pointer-events: none;
+    }
+
+    .dial-carousel {
+      display: flex;
+      align-items: center;
+      gap: 120px;
+      pointer-events: auto;
+    }
+
+    .dial-item {
+      width: 220px;
+      height: 220px;
+      aspect-ratio: 1 / 1;
+      cursor: pointer;
+      transition: transform 0.3s, opacity 0.3s, border-color 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      border-radius: 50%;
+      border: 2px solid transparent;
+      padding: 0;
+      overflow: hidden;
+      background: transparent !important;
+    }
+
+    .dial-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
+      border-radius: 50%;
+      mix-blend-mode: screen;
+    }
+
+    .dial-item:hover {
+      transform: scale(1.1);
+      border-color: rgba(255,255,255,0.2);
+    }
+
+    .dial-item.active { border-color: white; }
+    .dial-item.hidden { opacity: 0; pointer-events: none; }
+
+    .dial-nav-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.3s;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .dial-nav-btn:hover { background: rgba(255,255,255,0.2); }
+
+    .dial-filters {
+      position: absolute;
+      bottom: 200px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: none;
+      gap: 30px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-offwhite);
+      z-index: 30;
+      flex-wrap: wrap;
+      justify-content: center;
+      width: 90%;
+    }
+
+    .dial-filter-opt {
+      cursor: pointer;
+      transition: color 0.3s;
+    }
+
+    .dial-filter-opt.active { color: white; }
+
+    #activeDialLayer {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 220px;
+      height: 220px;
+      pointer-events: none;
+      z-index: 6;
+      opacity: 0;
+    }
+
+    #activeDialLayer img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    /* ═══════════════════════════════════════════
+       RESPONSIVE STYLES
+    ═══════════════════════════════════════════ */
+
+    /* ── Tablet: 768px – 1024px ── */
+    @media (max-width: 1024px) {
+      .c-header { left: 32px; top: 28px; }
+      .close-btn { right: 32px; top: 28px; }
+
+      .thumbnails {
+        right: 20px;
+        gap: 14px;
+      }
+
+      .thumb { width: 40px; height: 40px; }
+
+      .controls-left {
+        left: 32px;
+        bottom: 110px;
+      }
+
+      .step-title { font-size: 17px; }
+      .options-row { gap: 20px; font-size: 14px; }
+
+      .next-step-wrap { bottom: 100px; }
+
+      .summary-bar { padding: 0 32px; height: 80px; }
+
+      .watch-preview { height: 52vh; }
+
+      /* Story blocks */
+      .s-block { padding: 0 7%; }
+
+      .w-layer {
+        right: clamp(20px, 5vw, 60px);
+        width: clamp(240px, 35vw, 420px);
+        height: clamp(240px, 35vw, 420px);
+        opacity: 0.35;
+      }
+
+      .dial-carousel { gap: 60px; }
+      .dial-item { width: 170px; height: 170px; }
+
+      .dial-filters { bottom: 160px; gap: 18px; font-size: 13px; }
+
+      .s-tracker { right: 18px; }
+    }
+
+    /* ── Mobile: ≤ 767px ── */
+    @media (max-width: 767px) {
+      /* Header */
+      .c-header { left: 20px; top: 20px; }
+      .c-title { font-size: clamp(22px, 6vw, 32px); }
+      .close-btn { right: 20px; top: 20px; width: 34px; height: 34px; font-size: 18px; }
+
+      /* Watch preview — centred, smaller */
+      .watch-preview { height: 42vh; max-width: 80vw; }
+
+      /* Thumbnails: move to bottom strip above summary bar */
+      .thumbnails {
+        position: absolute;
+        right: unset;
+        top: unset;
+        left: 50%;
+        bottom: 250px;
+        transform: translateX(-50%);
+        flex-direction: row;
+        gap: 12px;
+      }
+
+      .thumb { width: 36px; height: 36px; }
+
+      /* Controls left: move to bottom, centred */
+      .controls-left {
+        left: 50%;
+        transform: translateX(-50%);
+        bottom: 170px;
+        text-align: center;
+        width: 90%;
+      }
+
+      .step-title { font-size: 15px; margin-bottom: 10px; text-align: center; }
+
+      .options-row {
+        justify-content: center;
+        gap: 16px;
+        font-size: 13px;
+        flex-wrap: wrap;
+      }
+
+      /* Next btn: slightly above summary bar */
+      .next-step-wrap {
+        bottom: 85px;
+      }
+
+      .btn-next { padding: 12px 28px; font-size: 13px; }
+
+      /* Summary bar */
+      .summary-bar {
+        padding: 0 20px;
+        height: 72px;
+      }
+
+      .s-model { font-size: 13px; }
+      .s-specs { font-size: 11px; }
+      .s-price { font-size: 11px; }
+
+      .s-add { width: 38px; height: 38px; font-size: 20px; }
+
+      /* ── Story blocks on mobile ── */
+      .s-block {
+        padding: 60px 6% 60px;
+        align-items: flex-end;
+        height: 100vh;
+      }
+
+      /* Hide the watch layer image on small screens (it overlaps text) */
+      .w-layer {
+        top: 12vh;
+        right: 50%;
+        transform: translateX(50%);
+        width: 55vw;
+        height: 55vw;
+        opacity: 0.15;
+        pointer-events: none;
+      }
+
+      /* Always left-align text on mobile regardless of even/odd */
+      .s-block:nth-child(even) .s-text-wrap {
+        margin-left: 0;
+        text-align: left;
+      }
+      .s-block:nth-child(even) .accent-line { margin-left: 0; }
+      .s-block:nth-child(even) .chapter-num {
+        left: -0.05em;
+        right: auto;
+      }
+
+      .s-text-wrap { max-width: 100%; }
+
+      .s-block h2 { font-size: clamp(28px, 7vw, 42px); margin-bottom: 18px; }
+      .s-block p  { font-size: clamp(14px, 3.8vw, 18px); line-height: 1.75; }
+
+      .chapter-num { font-size: 55vw; opacity: 0.025; }
+
+      /* Tracker: hide on very small screens, show at bottom-right */
+      .s-tracker {
+        right: 12px;
+        gap: 10px;
+      }
+
+      .dot { width: 2px; height: 16px; }
+
+      /* Dial carousel on mobile */
+      .dial-carousel {
+        gap: 28px;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        padding: 0 20px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        max-width: 90vw;
+      }
+
+      .dial-carousel::-webkit-scrollbar { display: none; }
+
+      .dial-item { width: 120px; height: 120px; flex-shrink: 0; }
+
+      .dial-nav-btn { width: 36px; height: 36px; font-size: 16px; }
+
+      /* Dial filters: horizontally scrollable */
+      .dial-filters {
+        bottom: 140px;
+        gap: 14px;
+        font-size: 12px;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        width: 88%;
+        justify-content: flex-start;
+        padding-bottom: 4px;
+        scrollbar-width: none;
+      }
+      .dial-filters::-webkit-scrollbar { display: none; }
+      .dial-filter-opt { white-space: nowrap; }
+
+      /* Scroll hint */
+      .scroll-hint { bottom: 28px; font-size: 10px; }
+
+      /* Orbs — scale down */
+      .orb-1 { width: 300px; height: 300px; }
+      .orb-2 { width: 250px; height: 250px; }
+      .orb-3 { width: 200px; height: 200px; }
+    }
+
+    /* ── Very small screens: ≤ 380px ── */
+    @media (max-width: 380px) {
+      .watch-preview { height: 38vh; }
+
+      .thumbnails { bottom: 155px; }
+
+      .controls-left { bottom: 88px; }
+
+      .options-row { gap: 12px; }
+
+      .next-step-wrap { bottom: 93px; }
+      .btn-next { padding: 10px 22px; font-size: 12px; }
+
+      .summary-bar { height: 66px; }
+
+      .dial-item { width: 100px; height: 100px; }
+    }
   </style>
 </head>
 <body>
@@ -462,14 +784,30 @@
 
     <div class="c-main">
       <img src="assets/fylex-watch-v2/40mm.png" alt="Watch preview" class="watch-preview" id="previewImg">
+      <div id="activeDialLayer"></div>
+      
+      <div class="dial-carousel-container" id="dialCarouselWrap">
+        <button class="dial-nav-btn" onclick="rotateDials(-1)">‹</button>
+        <div class="dial-carousel" id="dialCarousel">
+          <!-- Dials injected by JS -->
+        </div>
+        <button class="dial-nav-btn" onclick="rotateDials(1)">›</button>
+      </div>
+    </div>
+
+    <div class="dial-filters" id="dialFilters">
+      <span class="dial-filter-opt active">All</span>
+      <span class="dial-filter-opt">Light dial</span>
+      <span class="dial-filter-opt">Coloured dial</span>
+      <span class="dial-filter-opt">Dark dial</span>
+      <span class="dial-filter-opt">Gem-set dial</span>
+      <span class="dial-filter-opt">Diamond-paved dial</span>
     </div>
 
     <div class="thumbnails" id="thumbList">
-      <div class="thumb active" data-step="0"><img src="assets/fylex-watch-v2/40mm.png"></div>
-      <div class="thumb" data-step="1"><img src="assets/fylex-watch-v2/goldwatch.png"></div>
-      <div class="thumb" data-step="2"><img src="assets/fylex-watch-v2/Flutted.png"></div>
-      <div class="thumb" data-step="3"><img src="assets/fylex-watch-v2/olive-green.png"></div>
-      <div class="thumb" data-step="4"><img src="assets/fylex-watch-v2/goldwatch.png"></div>
+      <div class="thumb active" data-step="0"><img src="assets/fylex-watch-v2/only-dial.png"></div>
+      <div class="thumb" data-step="1"><img src="assets/fylex-watch-v2/left-side.png"></div>
+      <div class="thumb" data-step="2"><img src="assets/fylex-watch-v2/right-side.png"></div>
     </div>
 
     <div class="controls-left">
@@ -497,12 +835,10 @@
   <!-- ═══════════ PARALLAX STORY SECTION ═══════════ -->
   <section id="story">
 
-    <!-- Ambient background orbs -->
     <div class="orb orb-1" id="orb1"></div>
     <div class="orb orb-2" id="orb2"></div>
     <div class="orb orb-3" id="orb3"></div>
 
-    <!-- Grid lines overlay -->
     <div class="grid-lines"></div>
 
     <!-- ── Block 1 ── -->
@@ -569,16 +905,14 @@
         <p>At the heart of this masterpiece beats an entirely new generation calibre. Insensitive to magnetic fields and highly resistant to shocks, it offers a power reserve of approximately 70 hours. Our stringent internal certification criteria demand an accuracy of -2/+2 seconds per day, twice that required of an official chronometer. It is mechanical supremacy, quietly tracking the seconds of history's greatest moments.</p>
       </div>
 
-      <!-- Scroll hint inside last block -->
-      <div class="scroll-hint">
+      <!-- <div class="scroll-hint">
         <span>Scroll</span>
         <svg width="16" height="20" viewBox="0 0 16 20" fill="none">
           <path d="M8 0v16M1 9l7 7 7-7" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </div>
-    </div>
+    </div> -->
 
-    <!-- Fixed tracker -->
     <div class="s-tracker" id="tracker">
       <div class="dot active" data-target="b1"></div>
       <div class="dot" data-target="b2"></div>
@@ -631,10 +965,10 @@
         id: 'dial',
         title: 'Choose your dial',
         options: [
-          { name: 'Olive Green', img: 'assets/fylex-watch-v2/olive-green.png' },
-          { name: 'Chocolate', img: 'assets/fylex-watch-v2/chocolate.png' },
-          { name: 'Meteorite', img: 'assets/fylex-watch-v2/metorite.png' },
-          { name: 'Diamond-paved', img: 'assets/fylex-watch-v2/diamond-paved.png' }
+          { name: 'Olive Green', img: 'assets/fylex-watch-v2/olive-green.png', dialImg: 'assets/fylex-watch-v2/Olive-green-dial.png' },
+          { name: 'Chocolate', img: 'assets/fylex-watch-v2/chocolate.png', dialImg: 'assets/fylex-watch-v2/Chocolate-dial.png' },
+          { name: 'Meteorite', img: 'assets/fylex-watch-v2/metorite.png', dialImg: 'assets/fylex-watch-v2/metorite-dial.png' },
+          { name: 'Diamond-paved', img: 'assets/fylex-watch-v2/diamond-paved.png', dialImg: 'assets/fylex-watch-v2/Diamond-paved-dial.png' }
         ],
         nextLbl: 'Discover'
       },
@@ -656,7 +990,7 @@
       row: document.getElementById('optionsRow'),
       btn: document.getElementById('btnNext'),
       img: document.getElementById('previewImg'),
-      thumbs: document.querySelectorAll('.thumb')
+      thumbs: () => document.querySelectorAll('.thumb')
     };
 
     function renderStep(idx) {
@@ -666,6 +1000,9 @@
       els.btn.innerHTML = `${step.nextLbl} <span style="font-size:18px;">›</span>`;
 
       const storySec = document.getElementById('story');
+      const dialCarouselWrap = document.getElementById('dialCarouselWrap');
+      const dialFilters = document.getElementById('dialFilters');
+
       if (idx === steps.length - 1) {
         els.btn.style.display = 'none';
         storySec.style.display = 'block';
@@ -678,6 +1015,20 @@
         storySec.style.display = 'none';
       }
 
+      if (step.id === 'dial') {
+        els.row.style.display = 'none';
+        dialCarouselWrap.style.display = 'flex';
+        dialFilters.style.display = 'flex';
+        
+        if (!appliedDial) appliedDial = step.options[0].dialImg;
+        
+        renderDialCarousel();
+      } else {
+        els.row.style.display = 'flex';
+        dialCarouselWrap.style.display = 'none';
+        dialFilters.style.display = 'none';
+      }
+
       els.row.innerHTML = step.options.map((opt, i) =>
         `<span class="opt ${i===0 ? 'active' : ''}" data-img="${opt.img}">${opt.name}</span>`
       ).join('');
@@ -687,17 +1038,22 @@
           document.querySelectorAll('.opt').forEach(o => o.classList.remove('active'));
           e.target.classList.add('active');
           updatePreviewImage(e.target.getAttribute('data-img'));
+          els.thumbs().forEach(t => t.classList.remove('active'));
         });
       });
 
       updatePreviewImage(step.options[0].img);
-
-      els.thumbs.forEach(t => t.classList.remove('active'));
-      if (els.thumbs[idx]) els.thumbs[idx].classList.add('active');
+      
+      els.thumbs().forEach((t, i) => {
+        t.classList.toggle('active', i === idx);
+      });
     }
 
     function updatePreviewImage(src) {
-      if (els.img.src.includes(src)) return;
+      if (!src) return;
+      const currentSrc = els.img.getAttribute('src');
+      if (currentSrc === src || els.img.src === src) return;
+      
       gsap.to(els.img, { opacity: 0, duration: 0.2, onComplete: () => {
         els.img.src = src;
         gsap.to(els.img, { opacity: 1, duration: 0.3 });
@@ -713,15 +1069,139 @@
       }
     }
 
-    els.thumbs.forEach(thumb => {
+    /* ── DIAL CAROUSEL LOGIC ── */
+    let dialIndex = 0;
+    let appliedDial = null;
+
+    function renderDialCarousel() {
+      const carousel = document.getElementById('dialCarousel');
+      const step = steps[currentStep];
+      if (!step || step.id !== 'dial') return;
+
+      carousel.innerHTML = '';
+      step.options.forEach((opt, idx) => {
+        const item = document.createElement('div');
+        item.className = 'dial-item';
+        item.innerHTML = `<img src="${opt.dialImg}" alt="${opt.name}">`;
+        
+        if (appliedDial === opt.dialImg) {
+          item.classList.add('hidden');
+        }
+
+        item.onclick = () => selectDial(opt, item);
+        carousel.appendChild(item);
+      });
+    }
+
+    function selectDial(opt, itemEl) {
+      const activeLayer = document.getElementById('activeDialLayer');
+      const carousel = document.getElementById('dialCarousel');
+      const prevAppliedDial = appliedDial;
+      
+      appliedDial = opt.dialImg;
+
+      const rect = itemEl.getBoundingClientRect();
+      const flyer = document.createElement('div');
+      flyer.className = 'dial-item';
+      flyer.style.position = 'fixed';
+      flyer.style.top = rect.top + 'px';
+      flyer.style.left = rect.left + 'px';
+      flyer.innerHTML = `<img src="${opt.dialImg}">`;
+      flyer.style.zIndex = 100;
+      document.body.appendChild(flyer);
+
+      itemEl.classList.add('hidden');
+
+      if (prevAppliedDial) {
+        const slots = document.querySelectorAll('.dial-item');
+        let targetSlot = null;
+        slots.forEach(slot => {
+           if (slot.querySelector('img').src.includes(prevAppliedDial)) {
+             targetSlot = slot;
+           }
+        });
+
+        if (targetSlot) {
+          const slotRect = targetSlot.getBoundingClientRect();
+          const returnFlyer = document.createElement('div');
+          returnFlyer.className = 'dial-item';
+          returnFlyer.style.position = 'fixed';
+          returnFlyer.style.top = '50%';
+          returnFlyer.style.left = '50%';
+          returnFlyer.style.transform = 'translate(-50%, -50%)';
+          returnFlyer.innerHTML = `<img src="${prevAppliedDial}">`;
+          returnFlyer.style.zIndex = 50;
+          document.body.appendChild(returnFlyer);
+
+          gsap.to(returnFlyer, {
+            top: slotRect.top,
+            left: slotRect.left,
+            transform: 'translate(0, 0)',
+            width: slotRect.width,
+            height: slotRect.height,
+            opacity: 1,
+            duration: 0.6,
+            ease: "power2.inOut",
+            onComplete: () => {
+              targetSlot.classList.remove('hidden');
+              document.body.removeChild(returnFlyer);
+            }
+          });
+        }
+      }
+
+      const watchImg = document.getElementById('previewImg');
+      const watchRect = watchImg.getBoundingClientRect();
+      
+      const targetX = watchRect.left + (watchRect.width / 2) - 110;
+      const targetY = watchRect.top + (watchRect.height / 2) - 110;
+
+      gsap.to(flyer, {
+        top: targetY,
+        left: targetX,
+        width: 220,
+        height: 220,
+        duration: 0.6,
+        ease: "power2.inOut",
+        onComplete: () => {
+          updatePreviewImage(opt.img);
+          gsap.to(flyer, { opacity: 0, duration: 0.2, onComplete: () => document.body.removeChild(flyer) });
+        }
+      });
+    }
+
+    document.querySelectorAll('.dial-filter-opt').forEach(filter => {
+      filter.addEventListener('click', () => {
+        document.querySelectorAll('.dial-filter-opt').forEach(f => f.classList.remove('active'));
+        filter.classList.add('active');
+        renderDialCarousel();
+      });
+    });
+
+    function rotateDials(dir) {
+       const carousel = document.getElementById('dialCarousel');
+       if (dir > 0) {
+         carousel.appendChild(carousel.firstElementChild);
+       } else {
+         carousel.prepend(carousel.lastElementChild);
+       }
+    }
+
+    document.querySelectorAll('.thumb').forEach(thumb => {
       thumb.addEventListener('click', () => {
-        currentStep = parseInt(thumb.getAttribute('data-step'));
-        renderStep(currentStep);
+        const thumbImg = thumb.querySelector('img');
+        if (thumbImg) {
+          const src = thumbImg.getAttribute('src');
+          updatePreviewImage(src);
+          document.querySelectorAll('.thumb').forEach(t => t.classList.remove('active'));
+          thumb.classList.add('active');
+          document.querySelectorAll('.opt').forEach(o => o.classList.remove('active'));
+        }
       });
     });
 
     /* ─────────────────────────────────────────────
-       PARALLAX INIT (called once story is revealed)
+       PARALLAX INIT
     ───────────────────────────────────────────── */
     function initParallax() {
       const blocks   = document.querySelectorAll('.s-block');
@@ -730,17 +1210,15 @@
       const story    = document.getElementById('story');
       const configurator = document.getElementById('configurator');
 
-      /* ── 0. Pin the configurator to let story overlap ── */
       ScrollTrigger.create({
         trigger: configurator,
         pin: true,
         pinSpacing: false,
         start: "top top",
-        end: () => "+=" + window.innerHeight, // Stays pinned until b1 covers it
+        end: () => "+=" + window.innerHeight,
         refreshPriority: 1
       });
 
-      /* ── 1. Per-block animations ── */
       const bgColors = [
         '#5c4238',
         '#3d2b22',
@@ -757,10 +1235,8 @@
         const chapNum   = block.querySelector('.chapter-num');
         const speed     = parseFloat(chapNum?.dataset.speed || '-0.15');
 
-        // Apply bg color directly to block for layering
         block.style.backgroundColor = bgColors[i];
 
-        /* ── Pin the block ── */
         ScrollTrigger.create({
           trigger: block,
           pin: true,
@@ -772,21 +1248,22 @@
           }
         });
 
-        /* ── Chapter number deep parallax ── */
         if (chapNum) {
           gsap.to(chapNum, {
-            yPercent: speed * 300,
+            yPercent: speed * 250,
             ease: 'none',
+            force3D: true,
             scrollTrigger: {
               trigger: block,
               start: 'top bottom',
               end: 'bottom top',
-              scrub: true
+              scrub: 1.2,
+              fastScrollEnd: true,
+              preventOverlaps: true
             }
           });
         }
 
-        /* ── Accent line draw-in ── */
         gsap.from(accentLine, {
           scaleX: 0,
           duration: 0.8,
@@ -798,7 +1275,6 @@
           }
         });
 
-        /* ── Heading: clip + rise reveal ── */
         gsap.from(heading, {
           y: 60,
           opacity: 0,
@@ -811,7 +1287,6 @@
           }
         });
 
-        /* ── Paragraph: staggered word-group rise ── */
         gsap.from(paragraph, {
           y: 40,
           opacity: 0,
@@ -825,8 +1300,7 @@
           }
         });
 
-        /* ── Dial Reveal for Section 3 ── */
-        if (i === 2) { // Section 3 (b3)
+        if (i === 2) {
           const dial = block.querySelector('#dialB3');
           gsap.fromTo(dial, {
             scale: 0.85,
@@ -838,28 +1312,28 @@
             ease: 'power2.out',
             scrollTrigger: {
               trigger: block,
-              start: 'top top', // Start reveal exactly when section 3 starts overlapping
+              start: 'top top',
               toggleActions: 'play none none reverse'
             }
           });
         }
 
-        /* ── Subtle text-wrap horizontal drift (alternating direction) ── */
         const xFrom = i % 2 === 0 ? -30 : 30;
         gsap.from(textWrap, {
           x: xFrom,
           duration: 1.2,
           ease: 'power3.out',
+          force3D: true,
           scrollTrigger: {
             trigger: block,
             start: 'top 75%',
-            toggleActions: 'play none none reverse'
+            toggleActions: 'play none none reverse',
+            fastScrollEnd: true
           }
         });
 
       });
 
-      /* ── 3. Dividers: scale-in from centre ── */
       dividers.forEach(div => {
         gsap.from(div, {
           scaleX: 0,
@@ -874,26 +1348,27 @@
         });
       });
 
-      /* ── 4. Ambient orbs parallax (very slow drift) ── */
       gsap.to('#orb1', {
-        y: -200,
+        y: -150,
         ease: 'none',
-        scrollTrigger: { trigger: story, start: 'top bottom', end: 'bottom top', scrub: 2 }
+        force3D: true,
+        scrollTrigger: { trigger: story, start: 'top bottom', end: 'bottom top', scrub: 1.5 }
       });
       gsap.to('#orb2', {
-        y: 180,
-        x: -60,
+        y: 120,
+        x: -40,
         ease: 'none',
-        scrollTrigger: { trigger: story, start: 'top bottom', end: 'bottom top', scrub: 3 }
+        force3D: true,
+        scrollTrigger: { trigger: story, start: 'top bottom', end: 'bottom top', scrub: 2 }
       });
       gsap.to('#orb3', {
-        y: -120,
-        x: 80,
+        y: -90,
+        x: 60,
         ease: 'none',
-        scrollTrigger: { trigger: story, start: 'top bottom', end: 'bottom top', scrub: 2.5 }
+        force3D: true,
+        scrollTrigger: { trigger: story, start: 'top bottom', end: 'bottom top', scrub: 1.8 }
       });
 
-      /* ── 5. Dot tracker click navigation ── */
       dots.forEach(dot => {
         dot.addEventListener('click', () => {
           const target = document.getElementById(dot.getAttribute('data-target'));

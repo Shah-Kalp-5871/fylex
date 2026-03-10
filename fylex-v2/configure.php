@@ -212,25 +212,26 @@
     /* Pagination */
     .pagination {
       position: absolute;
-      bottom: 24px;
+      bottom: 40px;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
-      gap: 16px;
-      z-index: 20;
+      gap: 20px;
+      z-index: 100;
     }
 
     .pag-line {
-      width: 40px;
-      height: 3px;
+      width: 60px;
+      height: 4px;
       background: rgba(28, 37, 53, 0.2);
       border-radius: 2px;
       cursor: pointer;
-      transition: background 0.3s;
+      transition: all 0.4s ease;
     }
 
     .pag-line.active {
       background: var(--navy);
+      width: 90px;
     }
 
     /* ─── FOOTER (Copied exactly from index.php) ─── */
