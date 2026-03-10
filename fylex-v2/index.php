@@ -540,31 +540,6 @@
 
     .rdot.active { background: var(--rust); }
 
-    .btn-configure-showcase {
-      position: absolute;
-      bottom: 40px;
-      left: 50%;
-      transform: translateX(-50%);
-      background: #E8A87A;
-      color: #1C2535;
-      padding: 14px 40px;
-      border-radius: 30px;
-      font-size: 14px;
-      font-weight: 600;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      text-decoration: none;
-      z-index: 10;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(232, 168, 122, 0.2);
-    }
-
-    .btn-configure-showcase:hover {
-      background: #f0bd99;
-      transform: translateX(-50%) scale(1.05);
-      box-shadow: 0 6px 20px rgba(232, 168, 122, 0.4);
-    }
-
     /* ═══ 3. DIAL ═══ */
     #dial {
       background: var(--navy);
@@ -1499,7 +1474,6 @@
         <div class="rdot" data-index="1"></div>
         <div class="rdot" data-index="2"></div>
       </div>
-      <a href="configure.php" class="btn-configure-showcase">Configure Our Best Watches</a>
     </div>
   </section>
 
