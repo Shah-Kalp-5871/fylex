@@ -456,6 +456,7 @@
       display: none;
       align-items: center;
       justify-content: center;
+      gap: 30px;
       z-index: 25;
       pointer-events: none;
     }
@@ -477,9 +478,7 @@
       align-items: center;
       justify-content: center;
       position: relative;
-      border-radius: 50%;
       padding: 0;
-      overflow: hidden;
       background: transparent !important;
     }
 
@@ -487,16 +486,11 @@
       width: 100%;
       height: 100%;
       object-fit: contain;
-      filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));
-      border-radius: 50%;
+      filter: drop-shadow(0 4px 8px rgba(0,0,0,0.3));
       mix-blend-mode: screen;
     }
 
-    .dial-item:hover {
-      transform: scale(1.1);
-    }
-
-    .dial-item.active { /* Removed border */ }
+    .dial-item:hover { transform: scale(1.1); }
     .dial-item.hidden { opacity: 0; pointer-events: none; }
 
     .dial-nav-btn {
@@ -513,6 +507,7 @@
       transition: background 0.3s;
       font-size: 18px;
       flex-shrink: 0;
+      pointer-events: auto;
     }
 
     .dial-nav-btn:hover { background: rgba(255,255,255,0.2); }
@@ -614,15 +609,15 @@
       .close-btn { right: 20px; top: 20px; width: 34px; height: 34px; font-size: 18px; }
 
       /* Watch preview — centred, smaller */
-      .watch-preview { height: 42vh; max-width: 80vw; }
+      .watch-preview { height: 38vh; max-width: 75vw; }
 
-      /* Thumbnails: move to bottom strip above summary bar */
+      /* Thumbnails: horizontal strip above summary bar */
       .thumbnails {
         position: absolute;
         right: unset;
         top: unset;
         left: 50%;
-        bottom: 250px;
+        bottom: 230px;
         transform: translateX(-50%);
         flex-direction: row;
         gap: 12px;
@@ -630,11 +625,11 @@
 
       .thumb { width: 36px; height: 36px; }
 
-      /* Controls left: move to bottom, centred */
+      /* Controls: centred above thumbnails */
       .controls-left {
         left: 50%;
         transform: translateX(-50%);
-        bottom: 170px;
+        bottom: 160px;
         text-align: center;
         width: 90%;
       }
@@ -648,11 +643,8 @@
         flex-wrap: wrap;
       }
 
-      /* Next btn: slightly above summary bar */
-      .next-step-wrap {
-        bottom: 85px;
-      }
-
+      /* Next btn sits just above summary bar */
+      .next-step-wrap { bottom: 84px; }
       .btn-next { padding: 12px 28px; font-size: 13px; }
 
       /* Summary bar */
@@ -660,21 +652,18 @@
         padding: 0 20px;
         height: 72px;
       }
-
       .s-model { font-size: 13px; }
       .s-specs { font-size: 11px; }
       .s-price { font-size: 11px; }
-
       .s-add { width: 38px; height: 38px; font-size: 20px; }
 
       /* ── Story blocks on mobile ── */
       .s-block {
-        padding: 60px 6% 60px;
+        padding: 60px 6%;
         align-items: flex-end;
         height: 100vh;
       }
 
-      /* Hide the watch layer image on small screens (it overlaps text) */
       .w-layer {
         top: 12vh;
         right: 50%;
@@ -685,7 +674,7 @@
         pointer-events: none;
       }
 
-      /* Always left-align text on mobile regardless of even/odd */
+      /* Always left-align text on mobile */
       .s-block:nth-child(even) .s-text-wrap {
         margin-left: 0;
         text-align: left;
@@ -697,40 +686,42 @@
       }
 
       .s-text-wrap { max-width: 100%; }
-
       .s-block h2 { font-size: clamp(28px, 7vw, 42px); margin-bottom: 18px; }
       .s-block p  { font-size: clamp(14px, 3.8vw, 18px); line-height: 1.75; }
-
       .chapter-num { font-size: 55vw; opacity: 0.025; }
 
-      /* Tracker: hide on very small screens, show at bottom-right */
-      .s-tracker {
-        right: 12px;
-        gap: 10px;
-      }
-
+      /* Tracker */
+      .s-tracker { right: 12px; gap: 10px; }
       .dot { width: 2px; height: 16px; }
 
-      /* Dial carousel on mobile */
-      .dial-carousel {
-        gap: 28px;
-        flex-wrap: nowrap;
-        overflow-x: auto;
-        padding: 0 20px;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-        max-width: 90vw;
+      /* Dial carousel */
+      .dial-carousel-container {
+        top: auto;
+        bottom: 190px;
+        height: auto;
+        width: 100%;
+        gap: 8px;
+        padding: 0 10px;
       }
 
+      .dial-carousel {
+        gap: 18px;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overflow-y: hidden;
+        padding: 10px 8px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        max-width: calc(100vw - 110px);
+        touch-action: pan-x;
+      }
       .dial-carousel::-webkit-scrollbar { display: none; }
+      .dial-item { width: 80px; height: 80px; flex-shrink: 0; }
+      .dial-nav-btn { width: 34px; height: 34px; font-size: 15px; flex-shrink: 0; }
 
-      .dial-item { width: 120px; height: 120px; flex-shrink: 0; }
-
-      .dial-nav-btn { width: 36px; height: 36px; font-size: 16px; }
-
-      /* Dial filters: horizontally scrollable */
+      /* Dial filters */
       .dial-filters {
-        bottom: 140px;
+        bottom: 150px;
         gap: 14px;
         font-size: 12px;
         flex-wrap: nowrap;
@@ -743,31 +734,90 @@
       .dial-filters::-webkit-scrollbar { display: none; }
       .dial-filter-opt { white-space: nowrap; }
 
-      /* Scroll hint */
-      .scroll-hint { bottom: 28px; font-size: 10px; }
-
       /* Orbs — scale down */
       .orb-1 { width: 300px; height: 300px; }
       .orb-2 { width: 250px; height: 250px; }
       .orb-3 { width: 200px; height: 200px; }
     }
 
-    /* ── Very small screens: ≤ 380px ── */
-    @media (max-width: 380px) {
-      .watch-preview { height: 38vh; }
+    /* ── Very small screens: ≤ 480px ── */
+    @media (max-width: 480px) {
+      .watch-preview { height: 35vh; max-width: 70vw; }
 
-      .thumbnails { bottom: 155px; }
+      .thumbnails { bottom: 220px; }
+      .controls-left { bottom: 150px; }
+      .next-step-wrap { bottom: 80px; }
 
-      .controls-left { bottom: 88px; }
-
+      .summary-bar { height: 68px; }
       .options-row { gap: 12px; }
 
-      .next-step-wrap { bottom: 93px; }
+      .dial-carousel-container { bottom: 170px; }
+      .dial-item { width: 70px; height: 70px; }
+
+      .s-block h2 { font-size: clamp(24px, 6vw, 36px); }
+    }
+
+    /* ── Very small screens: ≤ 380px ── */
+    @media (max-width: 380px) {
+      .watch-preview { height: 32vh; max-width: 65vw; }
+
+      .thumbnails { bottom: 210px; gap: 10px; }
+      .thumb { width: 32px; height: 32px; }
+
+      .controls-left { bottom: 140px; }
+      .next-step-wrap { bottom: 76px; }
       .btn-next { padding: 10px 22px; font-size: 12px; }
 
-      .summary-bar { height: 66px; }
+      .summary-bar { height: 64px; padding: 0 16px; }
 
-      .dial-item { width: 100px; height: 100px; }
+      .dial-carousel-container { bottom: 155px; }
+      .dial-item { width: 60px; height: 60px; }
+      .dial-nav-btn { width: 30px; height: 30px; font-size: 14px; }
+
+      .dial-filters { bottom: 140px; font-size: 11px; }
+    }
+
+    /* ── Landscape mobile fix ── */
+    @media (max-width: 767px) and (orientation: landscape) {
+      .watch-preview { height: 60vh; max-width: 40vw; }
+
+      .thumbnails {
+        right: 20px;
+        left: unset;
+        top: 50%;
+        bottom: unset;
+        transform: translateY(-50%);
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .controls-left {
+        left: 20px;
+        transform: none;
+        bottom: 80px;
+        text-align: left;
+        width: auto;
+      }
+
+      .step-title { text-align: left; }
+      .options-row { justify-content: flex-start; }
+
+      .next-step-wrap { bottom: 72px; }
+
+      .summary-bar { height: 60px; }
+
+      .s-block { padding: 20px 8%; align-items: center; }
+      .s-block h2 { font-size: clamp(22px, 4vw, 36px); margin-bottom: 12px; }
+      .s-block p { font-size: clamp(13px, 2vw, 16px); line-height: 1.6; }
+
+      .w-layer {
+        top: 50%;
+        right: 5vw;
+        transform: translateY(-50%);
+        width: 35vw;
+        height: 35vw;
+        opacity: 0.2;
+      }
     }
   </style>
 </head>
@@ -902,14 +952,7 @@
         <h2>A Calibre of <em>Distinction</em></h2>
         <p>At the heart of this masterpiece beats an entirely new generation calibre. Insensitive to magnetic fields and highly resistant to shocks, it offers a power reserve of approximately 70 hours. Our stringent internal certification criteria demand an accuracy of -2/+2 seconds per day, twice that required of an official chronometer. It is mechanical supremacy, quietly tracking the seconds of history's greatest moments.</p>
       </div>
-
-      <!-- <div class="scroll-hint">
-        <span>Scroll</span>
-        <svg width="16" height="20" viewBox="0 0 16 20" fill="none">
-          <path d="M8 0v16M1 9l7 7 7-7" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </div>
-    </div> -->
+    </div>
 
     <div class="s-tracker" id="tracker">
       <div class="dot active" data-target="b1"></div>
@@ -917,8 +960,6 @@
       <div class="dot" data-target="b3"></div>
       <div class="dot" data-target="b4"></div>
       <div class="dot" data-target="b5"></div>
-    </div>
-
     </div>
 
   </section>
@@ -965,8 +1006,8 @@
         options: [
           { name: 'Olive Green', img: 'assets/fylex-watch-v2/olive-green.png', dialImg: 'assets/fylex-watch-v2/Olive-green-dial.png' },
           { name: 'Chocolate', img: 'assets/fylex-watch-v2/chocolate.png', dialImg: 'assets/fylex-watch-v2/Chocolate-dial.png' },
-          { name: 'Meteorite', img: 'assets/fylex-watch-v2/metorite.png', dialImg: 'assets/fylex-watch-v2/metorite-dial.png' },
-          { name: 'Diamond-paved', img: 'assets/fylex-watch-v2/diamond-paved.png', dialImg: 'assets/fylex-watch-v2/Diamond-paved-dial.png' }
+          { name: 'Meteorite', img: 'assets/fylex-watch-v2/metorite.png', dialImg: 'assets/fylex-watch-v2/metoritedial.png' },
+          { name: 'Diamond-paved', img: 'assets/fylex-watch-v2/diamond-paved.png', dialImg: 'assets/fylex-watch-v2/Diamondpaved-dial.png' }
         ],
         nextLbl: 'Discover'
       },
@@ -1013,10 +1054,13 @@
         storySec.style.display = 'none';
       }
 
+      const thumbList = document.getElementById('thumbList');
+
       if (step.id === 'dial') {
         els.row.style.display = 'none';
         dialCarouselWrap.style.display = 'flex';
         dialFilters.style.display = 'flex';
+        thumbList.style.display = 'none';
         
         if (!appliedDial) appliedDial = step.options[0].dialImg;
         
@@ -1025,6 +1069,7 @@
         els.row.style.display = 'flex';
         dialCarouselWrap.style.display = 'none';
         dialFilters.style.display = 'none';
+        thumbList.style.display = 'flex';
       }
 
       els.row.innerHTML = step.options.map((opt, i) =>
@@ -1077,18 +1122,27 @@
       if (!step || step.id !== 'dial') return;
 
       carousel.innerHTML = '';
-      step.options.forEach((opt, idx) => {
+      
+      const firstHalf = step.options.slice(0, 2);
+      const secondHalf = step.options.slice(2);
+
+      const createItem = (opt, idx) => {
         const item = document.createElement('div');
         item.className = 'dial-item';
         item.innerHTML = `<img src="${opt.dialImg}" alt="${opt.name}">`;
-        
-        if (appliedDial === opt.dialImg) {
-          item.classList.add('hidden');
-        }
-
         item.onclick = () => selectDial(opt, item);
-        carousel.appendChild(item);
-      });
+        return item;
+      };
+
+      firstHalf.forEach((opt, i) => carousel.appendChild(createItem(opt, i)));
+      
+      const spacer = document.createElement('div');
+      spacer.className = 'dial-spacer';
+      spacer.style.width = '20px'; 
+      spacer.style.flexShrink = '0';
+      carousel.appendChild(spacer);
+      
+      secondHalf.forEach((opt, i) => carousel.appendChild(createItem(opt, i+2)));
     }
 
     function selectDial(opt, itemEl) {
@@ -1120,7 +1174,10 @@
         });
 
         if (targetSlot) {
+          targetSlot.classList.remove('hidden');
           const slotRect = targetSlot.getBoundingClientRect();
+          targetSlot.classList.add('hidden');
+          
           const returnFlyer = document.createElement('div');
           returnFlyer.className = 'dial-item';
           returnFlyer.style.position = 'fixed';
@@ -1177,12 +1234,15 @@
     });
 
     function rotateDials(dir) {
-       const carousel = document.getElementById('dialCarousel');
+       const step = steps[currentStep];
+       if (!step || step.id !== 'dial') return;
+       
        if (dir > 0) {
-         carousel.appendChild(carousel.firstElementChild);
+         step.options.push(step.options.shift());
        } else {
-         carousel.prepend(carousel.lastElementChild);
+         step.options.unshift(step.options.pop());
        }
+       renderDialCarousel();
     }
 
     document.querySelectorAll('.thumb').forEach(thumb => {
