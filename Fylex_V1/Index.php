@@ -50,6 +50,222 @@ $gallery = [
 <title>Fylex</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
+  @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Cormorant+Garamond:wght@300;400&display=swap');
+
+  .flip-counter-section {
+    background: rgba(0,0,0,0.96);
+    border-top: 1px solid var(--gold-dim);
+    padding: 80px 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .flip-counter-wrapper {
+    text-align: center;
+  }
+
+  .flip-digits {
+    display: flex;
+    gap: 6px;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .flip-group {
+    display: flex;
+    gap: 4px;
+  }
+
+  .flip-group + .flip-group {
+    margin-left: 10px;
+  }
+
+  .flip-digit {
+    position: relative;
+    width: 56px;
+    height: 76px;
+    background: #1a1a1a;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.05);
+  }
+
+  /* Horizontal split line */
+  .flip-digit::after {
+    content: '';
+    position: absolute;
+    left: 0; right: 0;
+    top: 50%;
+    height: 1.5px;
+    background: rgba(0,0,0,0.6);
+    z-index: 10;
+  }
+
+  .flip-digit-inner {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: #ffffff;
+    letter-spacing: -0.02em;
+  }
+
+  /* Top half static */
+  .flip-top {
+    position: absolute;
+    inset: 0;
+    clip-path: inset(0 0 50% 0);
+    background: #1a1a1a;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: #fff;
+    z-index: 2;
+  }
+
+  /* Bottom half static */
+  .flip-bottom {
+    position: absolute;
+    inset: 0;
+    clip-path: inset(50% 0 0 0);
+    background: #111;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: #ccc;
+    z-index: 1;
+  }
+
+  /* Animated flap */
+  .flip-flap {
+    position: absolute;
+    inset: 0;
+    clip-path: inset(0 0 50% 0);
+    background: #1a1a1a;
+    border-radius: 8px;
+    transform-origin: center;
+    transform: rotateX(0deg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 2.4rem;
+    font-weight: 700;
+    color: #fff;
+    z-index: 3;
+    backface-visibility: hidden;
+    transform-style: preserve-3d;
+  }
+
+  .flip-flap::after {
+    content: attr(data-next);
+    position: absolute;
+    inset: 0;
+    background: #111;
+    color: #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: rotateX(180deg);
+    backface-visibility: hidden;
+    clip-path: inset(50% 0 0 0);
+    border-radius: 8px;
+  }
+
+  .flip-flap.animate {
+    animation: flipDown 0.35s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  }
+
+  @keyframes flipDown {
+    0%   { transform: rotateX(0deg); }
+    100% { transform: rotateX(-180deg); }
+  }
+
+  .flip-label {
+    margin-top: 24px;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1rem;
+    font-weight: 300;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: #6b6560;
+  }
+
+  /* Subtle shine on cards */
+  .flip-digit::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 50%;
+    background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 100%);
+    z-index: 5;
+    pointer-events: none;
+    border-radius: 8px 8px 0 0;
+  }
+
+  /* Responsive styles for flip counter */
+  @media (max-width: 768px) {
+    .flip-digit {
+      width: 42px;
+      height: 60px;
+    }
+    .flip-digit-inner {
+      font-size: 1.8rem;
+    }
+    .flip-digits {
+      gap: 4px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .flip-counter-wrapper {
+      padding: 0 10px;
+    }
+    .flip-digits {
+      gap: 4px;
+      flex-wrap: wrap;
+    }
+    .flip-group {
+      gap: 2px;
+    }
+    .flip-group + .flip-group {
+      margin-left: 6px;
+    }
+    .flip-digit {
+      width: 28px;
+      height: 42px;
+      border-radius: 6px;
+    }
+    .flip-digit::before {
+      border-radius: 6px 6px 0 0;
+    }
+    .flip-digit-inner {
+      font-size: 1.3rem;
+    }
+    .flip-top {
+      border-radius: 6px;
+    }
+    .flip-label {
+      font-size: 0.8rem;
+      margin-top: 16px;
+      letter-spacing: 0.1em;
+      line-height: 1.4;
+    }
+  }
+
   :root {
     --gold: #c9a96e;
     --gold-light: #e8d5b0;
@@ -852,6 +1068,14 @@ $gallery = [
   </div>
 </section>
 
+<!-- FLIP COUNTER SECTION — paste anywhere in your HTML -->
+<section class="flip-counter-section">
+  <div class="flip-counter-wrapper">
+    <div class="flip-digits" id="flipCounter"></div>
+    <p class="flip-label">Seconds of watchmaking excellence</p>
+  </div>
+</section>
+
 <!-- Lightbox -->
 <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
   <button class="lightbox-close" onclick="closeLightbox()">✕</button>
@@ -1231,8 +1455,16 @@ $gallery = [
   window.addEventListener('scroll', () => {
     if (animating) return;
     
+    // When natively scrolling up from gallery into the Features section
     if (window.scrollY < gallery.offsetTop - 10 && !observer.isEnabled) {
       observer.enable();
+      
+      // Auto-snap to featuresWrapper immediately if entering from below
+      currentFeat = items.length - 1;
+      updateFeatureItem(currentFeat);
+      goToSection(targets.length - 1, 0); // targets.length - 1 is featuresWrapper
+      lastStateChange = Date.now();
+      return; 
     }
 
     let closestIndex = 0, minDist = Infinity;
@@ -1298,6 +1530,94 @@ $gallery = [
       }, 800);
     }
   });
+</script>
+<script>
+(function() {
+  // Starting number — change this to your real stat
+  const START_VALUE = 246308291;
+
+  // How much to increment each second (simulate real-time sales)
+  const INCREMENT_PER_SECOND = 1;
+
+  let currentValue = START_VALUE;
+
+  function padNumber(num, length) {
+    return String(num).padStart(length, '0');
+  }
+
+  function createDigitEl(digit) {
+    const el = document.createElement('div');
+    el.className = 'flip-digit';
+    el.innerHTML = `
+      <div class="flip-top">${digit}</div>
+      <div class="flip-bottom">${digit}</div>
+      <div class="flip-flap" data-next="${digit}">${digit}</div>
+    `;
+    return el;
+  }
+
+  function buildCounter(value) {
+    const container = document.getElementById('flipCounter');
+    container.innerHTML = '';
+    const str = padNumber(value, 9); // 9 digits
+
+    // Split into groups of 3 for readability
+    const groups = [str.slice(0,3), str.slice(3,6), str.slice(6,9)];
+
+    groups.forEach((group, gi) => {
+      const groupEl = document.createElement('div');
+      groupEl.className = 'flip-group';
+      [...group].forEach((digit, di) => {
+        const el = createDigitEl(digit);
+        el.dataset.index = gi * 3 + di;
+        groupEl.appendChild(el);
+      });
+      container.appendChild(groupEl);
+    });
+  }
+
+  function animateDigit(digitEl, newDigit) {
+    const top = digitEl.querySelector('.flip-top');
+    const bottom = digitEl.querySelector('.flip-bottom');
+    const flap = digitEl.querySelector('.flip-flap');
+
+    // Flap shows old digit on front, new digit on back
+    flap.textContent = top.textContent;
+    flap.setAttribute('data-next', newDigit);
+    
+    flap.classList.remove('animate');
+    void flap.offsetWidth; // reflow
+    flap.classList.add('animate');
+
+    // After flip halfway, swap top to new digit
+    setTimeout(() => {
+      top.textContent = newDigit;
+      bottom.textContent = newDigit;
+    }, 175);
+  }
+
+  function updateCounter(newValue) {
+    const oldStr = padNumber(currentValue, 9);
+    const newStr = padNumber(newValue, 9);
+
+    const digits = document.querySelectorAll('.flip-digit');
+    [...newStr].forEach((ch, i) => {
+      if (ch !== oldStr[i]) {
+        animateDigit(digits[i], ch);
+      }
+    });
+
+    currentValue = newValue;
+  }
+
+  // Build initial state
+  buildCounter(currentValue);
+
+  // Tick every second
+  setInterval(() => {
+    updateCounter(currentValue + INCREMENT_PER_SECOND);
+  }, 1000);
+})();
 </script>
 </body>
 </html>
