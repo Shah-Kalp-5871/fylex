@@ -329,7 +329,7 @@ $gallery = [
     width: 90%;
     height: 80vh;
     position: absolute;
-    top: calc(50% + 40px);
+    top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     border-radius: var(--curve);
@@ -421,16 +421,13 @@ $gallery = [
     .features-section {
       display: flex;
       flex-direction: column;
-      position: sticky;
-      top: calc(var(--header-h) + 50px);   /* gap below the fixed header */
-      justify-self: center;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
       width: min(92vw, 420px);
-      height: 700px; /* updated height */
-      margin: 0 auto;
+      height: 700px;
       border-radius: var(--curve-sm);
-      /* reset desktop absolute positioning */
-      left: auto;
-      transform: none;
     }
     .features-left {
       padding: 20px;
@@ -961,7 +958,7 @@ $gallery = [
     const rect = el.getBoundingClientRect();
     const elCenter = rect.top + rect.height / 2;
     const vpCenter = window.innerHeight / 2;
-    return Math.abs(elCenter - vpCenter) < 100;
+    return Math.abs(elCenter - vpCenter) < 50;
   }
 
   // ── NEXT SECTION LOGIC (scroll forward / finger swipe up) ──
@@ -985,8 +982,13 @@ $gallery = [
       }
     }
 
-    // Features Wrapper — only scroll items when centered
-    if (targets[currentIndex] === featuresWrapper && isFeatCentered()) {
+    // Features Wrapper
+    if (targets[currentIndex] === featuresWrapper) {
+      if (!isFeatCentered()) {
+        goToSection(currentIndex);
+        lastStateChange = now;
+        return;
+      }
       if (currentFeat < items.length - 1) {
         updateFeatureItem(currentFeat + 1);
         lastStateChange = now;
@@ -1005,8 +1007,8 @@ $gallery = [
     const now = Date.now();
     if (now - lastStateChange < 350) return;
 
-    // Gallery -> Features (snap back to features wrapper from anywhere in/near gallery)
-    if (window.scrollY > gallery.offsetTop - window.innerHeight * 0.5) {
+    // Gallery -> Features snap (broader window for responsiveness)
+    if (window.scrollY > gallery.offsetTop - window.innerHeight * 0.8) {
       if (!observer.isEnabled) observer.enable();
       currentFeat = items.length - 1;
       updateFeatureItem(currentFeat);
@@ -1015,8 +1017,13 @@ $gallery = [
       return;
     }
 
-    // Features -> Steps or S6
+    // Features Wrapper
     if (targets[currentIndex] === featuresWrapper) {
+      if (!isFeatCentered()) {
+        goToSection(currentIndex);
+        lastStateChange = now;
+        return;
+      }
       if (currentFeat > 0) {
         updateFeatureItem(currentFeat - 1);
         lastStateChange = now;
@@ -1067,17 +1074,21 @@ $gallery = [
      * ─────────────────────────────────────────────────────────────────────
      */
     onDown: (self) => {
-      if (self.event.type === 'touchmove' || self.event.type === 'pointermove' && self.event.pointerType === 'touch') {
-        handlePrev();
-      } else {
+      // deltaY > 0: wheel down OR drag down
+      if (self.event.type === 'wheel') {
         handleNext();
+      } else {
+        // any drag down (mouse, touch, pointer) reveals content ABOVE
+        handlePrev();
       }
     },
     onUp: (self) => {
-      if (self.event.type === 'touchmove' || self.event.type === 'pointermove' && self.event.pointerType === 'touch') {
-        handleNext();
-      } else {
+      // deltaY < 0: wheel up OR drag up
+      if (self.event.type === 'wheel') {
         handlePrev();
+      } else {
+        // any drag up (mouse, touch, pointer) reveals content BELOW
+        handleNext();
       }
     },
     tolerance: 5,
@@ -1099,6 +1110,70 @@ $gallery = [
     });
   }
 
+  /* ── AUDIO LOGIC ── */
+  let audioCtx;
+  function playTick() {
+    try {
+      if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      if (audioCtx.state === 'suspended') audioCtx.resume();
+
+      const now = audioCtx.currentTime;
+
+      // ── LAYER 1: SHARP MECHANICAL CLICK (escapement tooth snap) ──
+      const clickBuf = audioCtx.sampleRate * 0.003;
+      const clickBuffer = audioCtx.createBuffer(1, clickBuf, audioCtx.sampleRate);
+      const clickData = clickBuffer.getChannelData(0);
+      for (let i = 0; i < clickBuf; i++) {
+        clickData[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / clickBuf, 3);
+      }
+      const click = audioCtx.createBufferSource();
+      const clickGain = audioCtx.createGain();
+      const clickFilter = audioCtx.createBiquadFilter();
+      click.buffer = clickBuffer;
+      clickFilter.type = 'bandpass';
+      clickFilter.frequency.value = 3800;
+      clickFilter.Q.value = 0.8;
+      clickGain.gain.setValueAtTime(0.9, now);
+      clickGain.gain.exponentialRampToValueAtTime(0.001, now + 0.015);
+      click.connect(clickFilter);
+      clickFilter.connect(clickGain);
+      clickGain.connect(audioCtx.destination);
+      click.start(now);
+
+      // ── LAYER 2: BODY RESONANCE (gear/wheel mass thud) ──
+      const body = audioCtx.createOscillator();
+      const bodyGain = audioCtx.createGain();
+      const bodyFilter = audioCtx.createBiquadFilter();
+      body.type = 'triangle';
+      body.frequency.setValueAtTime(210, now);
+      body.frequency.exponentialRampToValueAtTime(60, now + 0.03);
+      bodyFilter.type = 'lowpass';
+      bodyFilter.frequency.value = 400;
+      bodyFilter.Q.value = 1.2;
+      bodyGain.gain.setValueAtTime(0, now);
+      bodyGain.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+      body.connect(bodyFilter);
+      bodyFilter.connect(bodyGain);
+      bodyGain.connect(audioCtx.destination);
+      body.start(now);
+      body.stop(now + 0.05);
+
+      // ── LAYER 3: HIGH METALLIC PING (balance wheel spring) ──
+      const ping = audioCtx.createOscillator();
+      const pingGain = audioCtx.createGain();
+      ping.type = 'sine';
+      ping.frequency.setValueAtTime(6200, now);
+      ping.frequency.exponentialRampToValueAtTime(4800, now + 0.025);
+      pingGain.gain.setValueAtTime(0.12, now);
+      pingGain.gain.exponentialRampToValueAtTime(0.001, now + 0.025);
+      ping.connect(pingGain);
+      pingGain.connect(audioCtx.destination);
+      ping.start(now);
+      ping.stop(now + 0.025);
+
+    } catch(e) { console.error("Audio error:", e); }
+  }
+
   /* ── FEATURES LOGIC (Stepped) ── */
   const featureList = document.getElementById('featureList');
   const inner       = document.getElementById('featureItemsInner');
@@ -1109,6 +1184,8 @@ $gallery = [
 
   function updateFeatureItem(index) {
     if (index < 0 || index >= items.length) return;
+    if (index !== currentFeat) playTick();
+    
     items[currentFeat].classList.remove('active');
     images[currentFeat].classList.remove('active');
     currentFeat = index;
@@ -1141,8 +1218,8 @@ $gallery = [
   window.addEventListener('scroll', () => {
     if (animating) return;
     
-    // Enable observer if we scroll back up from gallery
-    if (window.scrollY < gallery.offsetTop - 100 && !observer.isEnabled) {
+    // Enable observer immediately when scrolling up past gallery top
+    if (window.scrollY < gallery.offsetTop - 10 && !observer.isEnabled) {
       observer.enable();
     }
 
@@ -1180,7 +1257,7 @@ $gallery = [
 
     const snapObserver = new IntersectionObserver(entries => {
       entries.forEach(entry => {
-        if (entry.isIntersecting && !featCentered) {
+        if (entry.isIntersecting && !featCentered && !animating) {
           featCentered = true;
           // Snap to center
           const rect = featSection.getBoundingClientRect();
