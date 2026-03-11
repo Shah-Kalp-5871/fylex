@@ -1007,7 +1007,7 @@
           { name: 'Olive Green', img: 'assets/fylex-watch-v2/olive-green.png', dialImg: 'assets/fylex-watch-v2/Olive-green-dial.png' },
           { name: 'Chocolate', img: 'assets/fylex-watch-v2/chocolate.png', dialImg: 'assets/fylex-watch-v2/Chocolate-dial.png' },
           { name: 'Meteorite', img: 'assets/fylex-watch-v2/metorite.png', dialImg: 'assets/fylex-watch-v2/metoritedial.png' },
-          { name: 'Diamond-paved', img: 'assets/fylex-watch-v2/diamond-paved.png', dialImg: 'assets/fylex-watch-v2/Diamondpaved-dial.png' }
+          { name: 'Diamond-paved', img: 'assets/fylex-watch-v2/diamond-paved.png', dialImg: 'assets/fylex-watch-v2/Diamondpavedial.png' }
         ],
         nextLbl: 'Discover'
       },
