@@ -57,7 +57,8 @@
     ::-webkit-scrollbar-track { background: var(--cream-2); }
     ::-webkit-scrollbar-thumb { background: var(--rust); }
 
-    /* ═══ NAV ═══ */
+    /* ═══ NAV ═══ (REPLACED BY header.php) */
+    /*
     nav {
       position: fixed;
       top: 0;
@@ -129,7 +130,6 @@
 
     .nbtn:hover { background: var(--navy-3); }
 
-    /* Hamburger */
     .hamburger {
       display: none;
       flex-direction: column;
@@ -153,7 +153,6 @@
     .hamburger.open span:nth-child(2) { opacity: 0; }
     .hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
 
-    /* Mobile Menu Overlay */
     .mobile-menu {
       display: none;
       position: fixed;
@@ -196,6 +195,7 @@
       padding: 14px 40px;
       margin-top: 12px;
     }
+    */
 
     /* ═══ COMMONS ═══ */
     .lbl {
@@ -500,6 +500,17 @@
       top: 50%;
       transform: translateY(-50%);
       z-index: 4;
+    }
+
+    .rbtn-wrap {
+      position: absolute;
+      top: auto;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      text-align: center;
+      z-index: 5;
     }
 
     .rdeg {
@@ -1296,6 +1307,15 @@
       .rdeg { display: none; }
       .rpag { bottom: 44px; }
 
+      .rbtn-wrap {
+        top: auto;
+        bottom: 90px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 100%;
+        text-align: center;
+      }
+
       /* DIAL */
       #dial { padding: 70px 24px; }
       .dwrap { grid-template-columns: 1fr; gap: 44px; }
@@ -1415,14 +1435,13 @@
 
 <body>
 
-  <!-- Mobile Menu Overlay -->
+  <?php include '../header.php'; ?>
+
+  <!-- Mobile Menu Overlay (REPLACED BY header.php) -->
+  <!--
   <div class="mobile-menu" id="mobileMenu">
     <a href="#" onclick="closeMobileMenu()">Heritage</a>
-    <!-- <a href="#" onclick="closeMobileMenu()">Collection</a> -->
     <a href="configure.php" onclick="closeMobileMenu()">Configure</a>
-    <!-- <a href="#" onclick="closeMobileMenu()">Boutiques</a>
-    <a href="#" onclick="closeMobileMenu()">Journal</a> -->
-    <!-- <a href="#cta" class="mnbtn" onclick="closeMobileMenu()">Acquire</a> -->
   </div>
 
   <nav id="nav">
@@ -1430,13 +1449,13 @@
     <ul class="nlinks">
       <li><a href="configure.php">Configure</a></li>
     </ul>
-    <!-- <a class="nbtn" href="#cta">Acquire</a> -->
     <div class="hamburger" id="hamburger" onclick="toggleMobileMenu()">
       <span></span>
       <span></span>
       <span></span>
     </div>
   </nav>
+  -->
 
   <!-- 1. HERO -->
   <section id="hero">
@@ -1468,6 +1487,9 @@
       </div>
       <div class="watch-showcase">
         <img id="mainWatch" src="assets/001.png" alt="Fylex Watch" />
+      </div>
+      <div class="rbtn-wrap r0">
+        <a href="configure.php" class="bf">Configure our watches</a>
       </div>
       <div class="rpag" id="rpag">
         <div class="rdot active" data-index="0"></div>
@@ -1735,7 +1757,8 @@
   </footer>
 
   <script>
-    // ─── MOBILE MENU ───
+    // ─── MOBILE MENU ─── (REPLACED BY header.php)
+    /*
     function toggleMobileMenu() {
       const menu = document.getElementById('mobileMenu');
       const burger = document.getElementById('hamburger');
@@ -1763,6 +1786,7 @@
       burger.classList.remove('open');
       nav.classList.remove('menu-open');
     }
+    */
 
     // ─── LENIS SMOOTH SCROLL ───
     const lenis = new Lenis({
