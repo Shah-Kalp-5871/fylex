@@ -67,6 +67,12 @@ $gallery = [
     scroll-behavior: auto !important;
     overflow-x: hidden;
     max-width: 100vw;
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE/Edge */
+  }
+
+  html::-webkit-scrollbar {
+    display: none; /* Chrome/Safari/Webkit */
   }
 
   body {
@@ -101,28 +107,52 @@ $gallery = [
   .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
   .hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
 
-  .mobile-menu {
+  /* ── BACKDROP (full-page blur behind the drawer) ── */
+  .mobile-menu-backdrop {
     display: none;
     position: fixed;
     inset: 0;
-    z-index: 1050;
-    background: rgba(8,6,3,0.97);
-    backdrop-filter: blur(20px);
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 0;
+    z-index: 1040;
+    background: rgba(0,0,0,0.45);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     opacity: 0;
     pointer-events: none;
     transition: opacity 0.4s ease;
   }
-  .mobile-menu.open {
+  .mobile-menu-backdrop.open {
     opacity: 1;
     pointer-events: all;
   }
+
+  .mobile-menu {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: clamp(260px, 60vw, 420px);
+    z-index: 1050;
+    background: rgba(8,6,3,0.96);
+    border-left: 1px solid var(--gold-dim);
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0;
+    padding: 0 0 40px 0;
+    opacity: 0;
+    pointer-events: none;
+    transform: translateX(100%);
+    transition: opacity 0.4s ease, transform 0.4s cubic-bezier(0.23,1,0.32,1);
+  }
+  .mobile-menu.open {
+    opacity: 1;
+    pointer-events: all;
+    transform: translateX(0);
+  }
   .mobile-menu a {
     font-family: 'Cormorant Garamond', serif;
-    font-size: clamp(2rem, 8vw, 3.4rem);
+    font-size: clamp(1.6rem, 6vw, 2.4rem);
     font-weight: 300;
     letter-spacing: 0.12em;
     color: var(--cream);
@@ -131,13 +161,14 @@ $gallery = [
     padding: 18px 40px;
     border-bottom: 1px solid rgba(201,169,110,0.12);
     width: 100%;
-    text-align: center;
-    transition: color 0.3s, background 0.3s;
+    text-align: left;
+    transition: color 0.3s, background 0.3s, padding-left 0.3s;
   }
   .mobile-menu a:first-child { border-top: 1px solid rgba(201,169,110,0.12); }
-  .mobile-menu a:hover { color: var(--gold); background: rgba(201,169,110,0.05); }
+  .mobile-menu a:hover { color: var(--gold); background: rgba(201,169,110,0.05); padding-left: 52px; }
   .mobile-menu .mobile-cta {
-    margin-top: 40px;
+    margin-top: 36px;
+    margin-left: 40px;
     font-family: 'Montserrat', sans-serif;
     font-size: 0.65rem;
     font-weight: 600;
@@ -151,7 +182,7 @@ $gallery = [
     border-bottom: none;
     width: auto;
   }
-  .mobile-menu .mobile-cta:hover { background: var(--gold-light); color: var(--dark); }
+  .mobile-menu .mobile-cta:hover { background: var(--gold-light); color: var(--dark); padding-left: 36px; }
 
   /* ── HEADER ── */
   header {
@@ -175,6 +206,13 @@ $gallery = [
     font-weight:300; letter-spacing:.25em;
     color:var(--gold); text-transform:uppercase; text-decoration:none;
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .logo img {
+    height: 32px;
+    width: auto;
   }
 
   nav { display:flex; gap: clamp(16px, 3vw, 40px); }
@@ -204,15 +242,14 @@ $gallery = [
     height: 100svh;
     min-height: 500px;
     width:100%;
-    background-attachment: fixed; /* Restore parallax */
+    background-attachment: fixed;
     background-size:cover; background-position:center;
     display:flex; align-items:center; justify-content:flex-start;
     padding-left: clamp(40px, 8vw, 120px);
     position:relative; overflow:hidden;
-    scroll-snap-align: start; /* Restore precision */
+    scroll-snap-align: start;
   }
 
-  /* Parallax enabled on mobile per request */
   @media (max-width: 768px) {
     .section { background-attachment: fixed; }
   }
@@ -221,7 +258,6 @@ $gallery = [
     content:''; position:absolute; inset:0; z-index:0;
   }
 
-  /* per-section overlays */
   .s1::before { background:linear-gradient(135deg,rgba(10,8,4,.70),rgba(40,28,10,.40)); }
   .s2::before { background:linear-gradient(160deg,rgba(6,4,1,.72),rgba(22,14,4,.44)); }
   .s3::before { background:linear-gradient(180deg,rgba(4,6,10,.70),rgba(8,16,26,.42)); }
@@ -229,7 +265,6 @@ $gallery = [
   .s5::before { background:linear-gradient(160deg,rgba(8,5,2,.70),rgba(28,18,6,.42)); }
   .s6::before { background:linear-gradient(180deg,rgba(6,4,1,.72),rgba(20,13,4,.44)); }
 
-  /* ── SECTION STACKING (no curves, full-screen, isolated) ── */
   .s1 { z-index: 6; }
   .s2 { z-index: 5; }
   .s3 { z-index: 4; }
@@ -237,7 +272,6 @@ $gallery = [
   .s5 { z-index: 2; }
   .s6 { z-index: 1; }
 
-  /* ── SECTION BACKGROUNDS ── */
   .s1 { background-image:url('https://frederiqueconstant.com/wp-content/uploads/images/Homepage_Mens_960x550-1-1920x1100.jpg'); }
   .s2 { background-image:url('Rim.png'); }
   .s3 { background-image:url('Watch_1.png'); }
@@ -248,11 +282,11 @@ $gallery = [
   /* ── CARD ── */
   .card {
     position:relative; z-index:1;
-    text-align:left; /* Align left */
-    padding: clamp(32px, 6vw, 64px) 0; /* Remove horizontal padding since no background */
+    text-align:left;
+    padding: clamp(32px, 6vw, 64px) 0;
     max-width: min(640px, 92vw);
     width: 100%;
-    opacity:0; transform:translateX(-30px); /* Slide from left */
+    opacity:0; transform:translateX(-30px);
     transition:opacity 0.7s cubic-bezier(0.2, 0, 0.2, 1), transform 0.7s cubic-bezier(0.2, 0, 0.2, 1);
   }
   .card.in { opacity:1; transform:translateX(0); }
@@ -262,14 +296,14 @@ $gallery = [
     font-size:.6rem; font-weight:600; letter-spacing:.35em;
     text-transform:uppercase; color:var(--gold); margin-bottom:24px;
     position:relative;
-    padding-left: 40px; /* Offset for the left line */
+    padding-left: 40px;
   }
   .label::before {
     content:''; position:absolute; top:50%; left: 0;
     width:28px; height:1px; background:var(--gold);
     transform: translateY(-50%);
   }
-  .label::after { display: none; } /* Only one line on the left */
+  .label::after { display: none; }
 
   .card h1 {
     font-family:'Cormorant Garamond',serif;
@@ -308,7 +342,7 @@ $gallery = [
 
   /* ── FEATURES WRAPPER ── */
   .features-wrapper {
-    height: 100svh; /* Reverted to normal */
+    height: 100svh;
     min-height: 500px;
     position: relative;
     z-index: 0;
@@ -415,7 +449,7 @@ $gallery = [
   @media (max-width: 768px) {
     .features-wrapper {
       display: grid;
-      place-items: center;       /* center both axes */
+      place-items: center;
       min-height: 100svh;
     }
     .features-section {
@@ -513,7 +547,6 @@ $gallery = [
     min-width: 0;
   }
 
-  /* Stagger on desktop */
   .gallery-column:nth-child(1), .gallery-column:nth-child(7) { margin-top: 0px; }
   .gallery-column:nth-child(2), .gallery-column:nth-child(6) { margin-top: 20px; }
   .gallery-column:nth-child(3), .gallery-column:nth-child(5) { margin-top: 40px; }
@@ -541,7 +574,6 @@ $gallery = [
   }
   .gallery-item:hover .overlay { opacity: 1; }
 
-  /* Mobile gallery — 2-3 cols */
   @media (max-width: 768px) {
     .gallery-grid {
       display: grid;
@@ -552,7 +584,6 @@ $gallery = [
       margin-top: 0 !important;
       gap: 8px;
     }
-    /* Hide extra columns on mobile, show only first 3 */
     .gallery-column:nth-child(n+4) { display: none; }
   }
   @media (max-width: 480px) {
@@ -661,6 +692,7 @@ $gallery = [
     nav, .cta { display: none !important; }
     .hamburger { display: flex !important; }
     .mobile-menu { display: flex; }
+    .mobile-menu-backdrop { display: block; }
   }
 
   /* Prevent body scroll when mobile menu open */
@@ -669,7 +701,10 @@ $gallery = [
 </head>
 <body>
 
-<!-- Mobile fullscreen menu -->
+<!-- Mobile menu backdrop -->
+<div class="mobile-menu-backdrop" id="menuBackdrop" onclick="closeMenu()"></div>
+
+<!-- Mobile slide-in menu -->
 <div class="mobile-menu" id="mobileMenu">
   <a href="#" onclick="closeMenu()">Collection</a>
   <a href="#" onclick="closeMenu()">Movements</a>
@@ -679,7 +714,10 @@ $gallery = [
 </div>
 
 <header id="hdr">
-  <a href="#" class="logo">Fylex</a>
+  <a href="#" class="logo">
+    <img src="fylex_logo.png" alt="Fylex Logo">
+    Fylex
+  </a>
   <nav>
     <a href="#">Collection</a>
     <a href="#">Movements</a>
@@ -823,7 +861,10 @@ $gallery = [
 <footer>
   <div class="footer-main">
     <div class="footer-col footer-brand">
-      <a href="#" class="logo">Fylex</a>
+      <a href="#" class="logo">
+        <img src="fylex_logo.png" alt="Fylex Logo">
+        Fylex
+      </a>
       <p>Redefining luxury horology through centuries of Swiss excellence and precision engineering.</p>
     </div>
     <div class="footer-col">
@@ -868,19 +909,27 @@ $gallery = [
   gsap.registerPlugin(ScrollToPlugin, Observer);
 
   /* ── HAMBURGER ── */
-  const hamburger   = document.getElementById('hamburger');
-  const mobileMenu  = document.getElementById('mobileMenu');
+  const hamburger     = document.getElementById('hamburger');
+  const mobileMenu    = document.getElementById('mobileMenu');
+  const menuBackdrop  = document.getElementById('menuBackdrop');
 
   function openMenu() {
     hamburger.classList.add('open');
     hamburger.setAttribute('aria-expanded', 'true');
+    mobileMenu.style.display = 'flex';
+    menuBackdrop.style.display = 'block';
+    // Force reflow so transition fires
+    mobileMenu.getBoundingClientRect();
+    menuBackdrop.getBoundingClientRect();
     mobileMenu.classList.add('open');
+    menuBackdrop.classList.add('open');
     document.body.classList.add('menu-open');
   }
   function closeMenu() {
     hamburger.classList.remove('open');
     hamburger.setAttribute('aria-expanded', 'false');
     mobileMenu.classList.remove('open');
+    menuBackdrop.classList.remove('open');
     document.body.classList.remove('menu-open');
   }
   hamburger.addEventListener('click', () => {
@@ -898,7 +947,7 @@ $gallery = [
   let gallery         = document.getElementById('gallery');
   let targets         = [...sections, featuresWrapper];
   let currentIndex    = 0;
-  let subStep         = 0; // 0: Image Only, 1: Text Visible
+  let subStep         = 0;
   let animating       = false;
   let lastStateChange = 0;
   let cardTimeout     = null;
@@ -937,7 +986,6 @@ $gallery = [
             setCardState(currentIndex, true);
           } else {
             setCardState(currentIndex, false);
-            // Auto-reveal after delay
             cardTimeout = setTimeout(() => {
               if (currentIndex < sections.length && subStep === 0 && !animating) {
                 setCardState(currentIndex, true);
@@ -951,7 +999,6 @@ $gallery = [
     });
   }
 
-  /* Helper: is the features section centered in the viewport? */
   function isFeatCentered() {
     const el = document.getElementById('features');
     if (!el) return false;
@@ -961,13 +1008,11 @@ $gallery = [
     return Math.abs(elCenter - vpCenter) < 50;
   }
 
-  // ── NEXT SECTION LOGIC (scroll forward / finger swipe up) ──
   function handleNext() {
     if (animating) return;
     const now = Date.now();
     if (now - lastStateChange < 350) return;
 
-    // S1-S6
     if (currentIndex < sections.length) {
       if (subStep === 0) {
         clearTimeout(cardTimeout);
@@ -982,7 +1027,6 @@ $gallery = [
       }
     }
 
-    // Features Wrapper
     if (targets[currentIndex] === featuresWrapper) {
       if (!isFeatCentered()) {
         goToSection(currentIndex);
@@ -1001,13 +1045,11 @@ $gallery = [
     }
   }
 
-  // ── PREV SECTION LOGIC (scroll backward / finger swipe down) ──
   function handlePrev() {
     if (animating) return;
     const now = Date.now();
     if (now - lastStateChange < 350) return;
 
-    // Gallery -> Features snap (broader window for responsiveness)
     if (window.scrollY > gallery.offsetTop - window.innerHeight * 0.8) {
       if (!observer.isEnabled) observer.enable();
       currentFeat = items.length - 1;
@@ -1017,7 +1059,6 @@ $gallery = [
       return;
     }
 
-    // Features Wrapper
     if (targets[currentIndex] === featuresWrapper) {
       if (!isFeatCentered()) {
         goToSection(currentIndex);
@@ -1035,7 +1076,6 @@ $gallery = [
       }
     }
 
-    // S1-S6
     if (currentIndex < sections.length) {
       if (subStep === 1) {
         setCardState(currentIndex, false);
@@ -1052,42 +1092,17 @@ $gallery = [
 
   observer = Observer.create({
     type: "wheel,touch,pointer",
-    /*
-     * DIRECTION MAPPING
-     * ─────────────────────────────────────────────────────────────────────
-     * GSAP Observer fires:
-     *   onDown  → deltaY is POSITIVE  (wheel scrolling down  / touch finger moving DOWN)
-     *   onUp    → deltaY is NEGATIVE  (wheel scrolling up    / touch finger moving UP)
-     *
-     * On a MOUSE/TRACKPAD this is natural:
-     *   scroll down  → go to next section  (onDown → handleNext)
-     *   scroll up    → go to prev section  (onUp   → handlePrev)
-     *
-     * On TOUCH the same gesture direction applies in GSAP Observer —
-     * dragging finger DOWN also fires onDown, dragging UP fires onUp.
-     * That means finger-drag-down = onDown = handleNext which feels
-     * inverted on mobile (dragging down should reveal content ABOVE).
-     *
-     * Fix: on touch events, swap the handlers so that:
-     *   finger drag DOWN (onDown) → handlePrev  (go to previous/upper section)
-     *   finger drag UP   (onUp)   → handleNext  (go to next/lower section)
-     * ─────────────────────────────────────────────────────────────────────
-     */
     onDown: (self) => {
-      // deltaY > 0: wheel down OR drag down
       if (self.event.type === 'wheel') {
         handleNext();
       } else {
-        // any drag down (mouse, touch, pointer) reveals content ABOVE
         handlePrev();
       }
     },
     onUp: (self) => {
-      // deltaY < 0: wheel up OR drag up
       if (self.event.type === 'wheel') {
         handlePrev();
       } else {
-        // any drag up (mouse, touch, pointer) reveals content BELOW
         handleNext();
       }
     },
@@ -1193,12 +1208,10 @@ $gallery = [
     images[currentFeat].classList.add('active');
     if (counter) counter.textContent = String(currentFeat + 1).padStart(2, '0');
 
-    // Smooth internal list movement
     const maxTranslate = Math.max(0, inner.scrollHeight - featureList.clientHeight);
     const progress = currentFeat / (items.length - 1);
     gsap.to(inner, { y: -progress * maxTranslate, duration: 0.6, ease: "circ.out" });
 
-    // Relative highlighting
     const refDistance = (items.length > 1 ? items[1].offsetTop - items[0].offsetTop : 100) * 1.5;
     const focalY = items[currentFeat].offsetTop + items[currentFeat].clientHeight / 2;
     items.forEach(item => {
@@ -1218,7 +1231,6 @@ $gallery = [
   window.addEventListener('scroll', () => {
     if (animating) return;
     
-    // Enable observer immediately when scrolling up past gallery top
     if (window.scrollY < gallery.offsetTop - 10 && !observer.isEnabled) {
       observer.enable();
     }
@@ -1259,7 +1271,6 @@ $gallery = [
       entries.forEach(entry => {
         if (entry.isIntersecting && !featCentered && !animating) {
           featCentered = true;
-          // Snap to center
           const rect = featSection.getBoundingClientRect();
           const targetY = window.scrollY + rect.top - (window.innerHeight / 2 - rect.height / 2);
           gsap.to(window, {
