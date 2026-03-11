@@ -1455,16 +1455,8 @@ $gallery = [
   window.addEventListener('scroll', () => {
     if (animating) return;
     
-    // When natively scrolling up from gallery into the Features section
     if (window.scrollY < gallery.offsetTop - 10 && !observer.isEnabled) {
       observer.enable();
-      
-      // Auto-snap to featuresWrapper immediately if entering from below
-      currentFeat = items.length - 1;
-      updateFeatureItem(currentFeat);
-      goToSection(targets.length - 1, 0); // targets.length - 1 is featuresWrapper
-      lastStateChange = Date.now();
-      return; 
     }
 
     let closestIndex = 0, minDist = Infinity;

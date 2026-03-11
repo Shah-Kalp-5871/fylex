@@ -1075,7 +1075,7 @@
       letter-spacing: .05em;
     }
 
-    /* ═══ FOOTER ═══ */
+    /* ═══ FOOTER (Commented out) ═══ 
     .footer-premium {
       background: #0F172A;
       padding: 100px 8% 40px;
@@ -1129,6 +1129,7 @@
     }
 
     .flogo span { color: #E8A87A; }
+    */
 
     /* ═══ FEATURE BLOCKS ═══ */
     .fxt-feature-block {
@@ -1273,7 +1274,7 @@
 
       .fxt-feature-block { padding: 100px 6%; gap: 60px; }
 
-      .f-grid { grid-template-columns: 1fr 1fr; gap: 40px; }
+      /* .f-grid { grid-template-columns: 1fr 1fr; gap: 40px; } */
     }
 
     /* ── Mobile (≤768px) ── */
@@ -1373,7 +1374,7 @@
       #heritage-2-video { height: 60vh; }
       #watch-sequence { height: 180vh; }
 
-      /* FOOTER */
+      /* FOOTER (Commented out) 
       .footer-premium { padding: 60px 24px 32px; }
       .f-grid {
         grid-template-columns: 1fr;
@@ -1386,6 +1387,7 @@
         text-align: center;
         padding-top: 24px;
       }
+      */
     }
 
     /* ── Small Mobile (≤480px) ── */
@@ -1416,9 +1418,10 @@
       /* FEATURE BLOCKS */
       .fxt-feature-block { padding: 48px 20px; gap: 32px; }
 
-      /* FOOTER */
+      /* FOOTER (Commented out) 
       .footer-premium { padding: 48px 20px 28px; }
       .f-col h4 { font-size: 16px; margin-bottom: 20px; }
+      */
     }
 
     /* ── Landscape Mobile ── */
@@ -1713,6 +1716,7 @@
     </div>
   </section>
 
+  <!-- FOOTER HEADER COMMENTED OUT
   <footer class="footer-premium">
     <div class="f-grid">
       <div class="f-col">
@@ -1755,6 +1759,9 @@
       </div>
     </div>
   </footer>
+  -->
+
+  <?php include '../footer.php'; ?>
 
   <script>
     // ─── MOBILE MENU ─── (REPLACED BY header.php)
